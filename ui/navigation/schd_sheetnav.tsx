@@ -21,7 +21,7 @@ import {
   }
   
   
-  export default function ToolGarticSheetNav({portfolio,org,tool,ring,onNavigate}:ToolMenuProps) {  
+  export default function SchdSheetNav({portfolio,org,tool,ring,onNavigate}:ToolMenuProps) {  
       
       const [open, setOpen] = useState(false);
          

@@ -1,17 +1,32 @@
-//import ToolGarticCRUD from "@/tools/gartic/pages/tool_gartic_crud"
 import ToolDataCRUD from "../../../tools/data/ui/pages/tool_data_crud"
 
-//import { useLocation } from "react-router-dom";
 
-export default function Schd({ portfolio, org, tool, ring }: {
+interface Portfolio {
+  name: string;
+  portfolio_id: string;
+  orgs: Record<string, Org>;
+  tools: Record<string, Tool>;
+}
+
+interface Org {
+  name: string;
+  org_id: string;
+  tools: string[];
+}
+
+interface Tool {
+  name: string;
+  handle: string;
+}
+
+export default function Schd({ portfolio, org, tool, ring, tree }: {
   portfolio: string;
   org: string;
   tool: string;
   ring?: string;  // optional prop since it might be undefined
+  tree?: { portfolios: Record<string, Portfolio> };
 }) {
-
-    //const location = useLocation();
-    //const page = location.pathname.split('/')[4]
+ 
 
     console.log('Schd > Ring:',ring)
 
