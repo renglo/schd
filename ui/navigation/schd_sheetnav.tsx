@@ -5,6 +5,7 @@ import {
     Settings,
     Search,
     EllipsisVertical,
+    Wand,
   } from "lucide-react"
   
   import { Input } from "@/components/ui/input"
@@ -76,6 +77,16 @@ import {
                       className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >
                       <TimerReset className="h-5 w-5" />
+                      Rules
+                  </button>
+                  <button 
+                      onClick={() => {
+                          setOpen(false);
+                          onNavigate(`/${portfolio}/${org}/schd/schd_actions`);
+                      }}
+                      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                      <Wand className="h-5 w-5" />
                       Rules
                   </button>
                   

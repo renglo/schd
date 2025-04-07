@@ -38,6 +38,7 @@ export default function Schd({ portfolio, org, tool, ring, tree }: {
             {ring === 'schd_jobs' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
             {ring === 'schd_runs' && <ToolDataCRUD readonly={true} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
             {ring === 'schd_rules' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
+            {ring === 'schd_actions' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
 
           </div>
         </div>
