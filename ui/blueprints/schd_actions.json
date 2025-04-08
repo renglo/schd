@@ -191,10 +191,15 @@
       }   
     ],
     "handle": "irma",
+    "indexes": {
+        "path": [
+            "key"
+        ]
+    },
     "irn": "irn:blueprint:irma:schd_actions",
     "label": "Actions",
     "license": "CC BY",
-    "name": "actions",
+    "name": "schd_actions",
     "public": true,
     "singleton": false,
     "status": "final",
