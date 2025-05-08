@@ -5,7 +5,8 @@ import {
     Settings,
     Search,
     EllipsisVertical,
-    Wand,
+    Wrench,
+    Zap,
   } from "lucide-react"
   
   import { Input } from "@/components/ui/input"
@@ -86,12 +87,19 @@ import {
                       }}
                       className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >
-                      <Wand className="h-5 w-5" />
-                      Rules
+                      <Zap className="h-5 w-5" />
+                      Actions
                   </button>
-                  
-  
-  
+                  <button 
+                      onClick={() => {
+                          setOpen(false);
+                          onNavigate(`/${portfolio}/${org}/schd/schd_tools`);
+                      }}
+                      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                      <Wrench className="h-5 w-5" />
+                      Tools
+                  </button>
                   <button
                       onClick={() => {
                           setOpen(false);
