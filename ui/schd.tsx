@@ -1,4 +1,6 @@
 import ToolDataCRUD from "../../../tools/data/ui/pages/tool_data_crud"
+import SchdActionProbe from "../../../tools/schd/ui/pages/schd_action_probe"
+import SchdToolProbe from "../../../tools/schd/ui/pages/schd_tool_probe"
 
 
 interface Portfolio {
@@ -40,6 +42,9 @@ export default function Schd({ portfolio, org, tool, ring, tree }: {
             {ring === 'schd_rules' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
             {ring === 'schd_actions' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
             {ring === 'schd_tools' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
+
+            {ring === 'action' && <SchdActionProbe portfolio={portfolio} org={org} tool={tool} />}
+            {ring === 'tool' && <SchdToolProbe portfolio={portfolio} org={org} tool={tool} />}
 
           </div>
         </div>
