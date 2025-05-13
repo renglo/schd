@@ -21,30 +21,30 @@ interface Tool {
   handle: string;
 }
 
-export default function Schd({ portfolio, org, tool, ring, tree }: {
+export default function Schd({ portfolio, org, tool, section, tree }: {
   portfolio: string;
   org: string;
   tool: string;
-  ring?: string;  // optional prop since it might be undefined
+  section?: string;  // optional prop since it might be undefined
   tree?: { portfolios: Record<string, Portfolio> };
 }) {
  
 
-    console.log('Schd > Ring:',ring)
+    console.log('Schd > Section:',section)
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
         
           <div className="flex flex-col sm:gap-2 sm:pl-2">
 
-            {ring === 'schd_jobs' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
-            {ring === 'schd_runs' && <ToolDataCRUD readonly={true} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
-            {ring === 'schd_rules' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
-            {ring === 'schd_actions' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
-            {ring === 'schd_tools' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={ring} />}
+            {section === 'schd_jobs' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={section} />}
+            {section === 'schd_runs' && <ToolDataCRUD readonly={true} portfolio={portfolio} org={org} tool={tool} ring={section} />}
+            {section === 'schd_rules' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={section} />}
+            {section === 'schd_actions' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={section} />}
+            {section === 'schd_tools' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={section} />}
 
-            {ring === 'action' && <SchdActionProbe portfolio={portfolio} org={org} tool={tool} />}
-            {ring === 'tool' && <SchdToolProbe portfolio={portfolio} org={org} tool={tool} />}
+            {section === 'action' && <SchdActionProbe portfolio={portfolio} org={org} tool={tool} />}
+            {section === 'tool' && <SchdToolProbe portfolio={portfolio} org={org} tool={tool} />}
 
           </div>
         </div>
