@@ -18,12 +18,12 @@ import {
       portfolio: string;
       org: string;
       tool?: string;
-      ring?: string;
+      section?: string;
       onNavigate: (path: string) => void;
   }
   
   
-  export default function SchdSheetNav({portfolio,org,tool,ring,onNavigate}:ToolMenuProps) {  
+  export default function SchdSheetNav({portfolio,org,tool,section,onNavigate}:ToolMenuProps) {  
       
       const [open, setOpen] = useState(false);
          

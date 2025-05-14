@@ -17,11 +17,11 @@ interface ToolMenuProps {
     portfolio: string;
     org: string;
     tool?: string;
-    ring?: string;
+    section?: string;
     onNavigate: (path: string) => void;
 }
 
-export default function ToolSchdSideNav({portfolio, org, tool, ring, onNavigate}:ToolMenuProps) {    
+export default function ToolSchdSideNav({portfolio, org, tool, section, onNavigate}:ToolMenuProps) {    
        
       return (  
         <nav 
@@ -39,7 +39,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, ring, onNavigate}
                     <button
                       onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_jobs`)}
                       className={
-                        ring === 'schd_jobs'
+                        section === 'schd_jobs'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
                           : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
                       }
@@ -60,7 +60,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, ring, onNavigate}
                     <button
                       onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_runs`)}
                       className={
-                        ring === 'schd_runs'
+                        section === 'schd_runs'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
                           : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
                       }
@@ -81,7 +81,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, ring, onNavigate}
                     <button
                       onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_rules`)}
                       className={
-                        ring === 'schd_rules'
+                        section === 'schd_rules'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
                           : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
                       }
@@ -102,7 +102,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, ring, onNavigate}
                     <button
                       onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_actions`)}
                       className={
-                        ring === 'schd_actions'
+                        section === 'schd_actions'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
                           : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
                       }
@@ -123,7 +123,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, ring, onNavigate}
                     <button
                       onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_tools`)}
                       className={
-                        ring === 'schd_tools'
+                        section === 'schd_tools'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
                           : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
                       }
@@ -145,7 +145,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, ring, onNavigate}
                     <button
                       onClick={() => onNavigate(`/${portfolio}/${org}/schd/action`)}
                       className={
-                        ring === 'action'
+                        section === 'action'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
                           : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
                       }
@@ -166,7 +166,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, ring, onNavigate}
                     <button
                       onClick={() => onNavigate(`/${portfolio}/${org}/schd/tool`)}
                       className={
-                        ring === 'tool'
+                        section === 'tool'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
                           : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
                       }
