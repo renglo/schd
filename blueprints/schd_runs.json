@@ -30,7 +30,7 @@
             "options": {
                 "new": "New",
                 "executed": "Executed",
-                "failed": "Failed",
+                "failed": "Failed"
             },
             "order": 2,
             "required": true,
