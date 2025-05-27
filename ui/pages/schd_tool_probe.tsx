@@ -1,15 +1,15 @@
 import {
-    CircleHelp,
+  CircleHelp,
 } from "lucide-react"
 
 
 import { Button } from "@/components/ui/button"
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+Card,
+CardContent,
+CardFooter,
+CardHeader,
+CardTitle,
 } from "@/components/ui/card"
 
 
@@ -24,88 +24,122 @@ import TriggerEndpoint from "@/components/tank/trigger-endpoint"
 
 
 interface Blueprint {
-    label: string;
-    // Add other properties as needed
-    [key: string]: any; // This allows for additional dynamic properties if necessary
-  }
+  label: string;
+  // Add other properties as needed
+  [key: string]: any; // This allows for additional dynamic properties if necessary
+}
 
 
 interface DataType {
-  name?: string;
-  _id?: string;
-  [key: string]: any; // Additional properties
+name?: string;
+_id?: string;
+[key: string]: any; // Additional properties
 }
 
 interface FieldDictionary {
-  [key: string]: {
-    label?: string;
-    hint?: string;
-    widget?: string;
-    order?: number;
-  };
-}
-
-interface BlueprintField {
-  name: string;
+[key: string]: {
   label?: string;
   hint?: string;
   widget?: string;
+  order?: number;
+};
+}
+
+interface BlueprintField {
+name: string;
+label?: string;
+hint?: string;
+widget?: string;
 }
 
 interface ToolDataCRUDProps {
-    portfolio: string;
-    org: string;
-    tool: string;
-    ring: string;
+  portfolio: string;
+  org: string;
+  tool: string;
+  ring: string;
 }
 
-  
+
 export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProps) {
 
 
-    //const [data, setData] = useState({}); // State to hold table data
-    const [data, setData] = useState<DataType>({});
+  //const [data, setData] = useState({}); // State to hold table data
+  const [data, setData] = useState<DataType>({});
 
-    //const [loading, setLoading] = useState(true); // State to manage loading status
-    const [error, setError] = useState<Error | null>(null);
-    const [refresh, setRefresh] = useState(false);
-    const [fieldsDictionary, setFieldsDictionary] = useState<FieldDictionary>({});
-    const [blueprint, setBlueprint] = useState<Blueprint>({ label: '' });
-    const [toolId, setToolId] = useState<string | null>(null);
+  //const [loading, setLoading] = useState(true); // State to manage loading status
+  const [error, setError] = useState<Error | null>(null);
+  const [refresh, setRefresh] = useState(false);
+  const [fieldsDictionary, setFieldsDictionary] = useState<FieldDictionary>({});
+  const [blueprint, setBlueprint] = useState<Blueprint>({ label: '' });
+  const [toolId, setToolId] = useState<string | null>(null);
 
-    const [activeOps, setActiveOps] = useState<boolean>(false);
+  const [activeOps, setActiveOps] = useState<boolean>(false);
 
-    const [inputs, setInputs] = useState<Record<string, string>>({});
-    const [inputValues, setInputValues] = useState<Record<string, string>>({});
+  const [inputs, setInputs] = useState<Record<string, string>>({});
+  const [inputValues, setInputValues] = useState<Record<string, string>>({});
 
-    const [response, setResponse] = useState<any>(null);
-    const [errorResponse, setErrorResponse] = useState<any>(null);
-
-
-    console.log('TGC>Portfolio:',portfolio)
-    console.log('TGC>Org:',org)
-    console.log('TGC>Tool:',tool)
-
-    const ring = 'schd_tools';
+  const [response, setResponse] = useState<any>(null);
+  const [errorResponse, setErrorResponse] = useState<any>(null);
 
 
+  console.log('TGC>Portfolio:',portfolio)
+  console.log('TGC>Org:',org)
+  console.log('TGC>Tool:',tool)
 
-    // 1
-    useEffect(() => {
-        // Function to fetch config Blueprint
-        const fetchBlueprint = async () => {
+  const ring = 'schd_tools';
+
+
+
+  // 1
+  useEffect(() => {
+      // Function to fetch config Blueprint
+      const fetchBlueprint = async () => {
+        try {
+          // Fetch Blueprint
+          const blueprintResponse = await fetch(`${import.meta.env.VITE_API_URL}/_blueprint/irma/${ring}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${sessionStorage.accessToken}`,
+            },
+          });
+          const blueprintData = await blueprintResponse.json();
+          setBlueprint(blueprintData);
+
+  
+        } catch (err) {
+          if (err instanceof Error) {
+            setError(err);  // Now TypeScript knows `err` is of type `Error`.
+          } else {
+            setError(new Error("An unknown error occurred"));  // Handle other types
+          }
+          console.log(error)
+        } finally {
+          //setLoading(false);
+        }
+      };
+  
+      fetchBlueprint();
+  }, []);
+
+
+  // 2
+  useEffect(() => {
+      // Function to fetch the input documents
+      const fetchData = async () => {
           try {
-            // Fetch Blueprint
-            const blueprintResponse = await fetch(`${import.meta.env.VITE_API_URL}/_blueprint/irma/${ring}`, {
+          // Fetch Data
+          
+          const dataResponse = await fetch(`${import.meta.env.VITE_API_URL}/_data/${portfolio}/${org}/${ring}/${toolId}`, {
               method: 'GET',
               headers: {
-                'Authorization': `Bearer ${sessionStorage.accessToken}`,
+              'Authorization': `Bearer ${sessionStorage.accessToken}`,
               },
-            });
-            const blueprintData = await blueprintResponse.json();
-            setBlueprint(blueprintData);
+          });
+          const response = await dataResponse.json();
+          setData(response);
 
-    
+          
+      
           } catch (err) {
             if (err instanceof Error) {
               setError(err);  // Now TypeScript knows `err` is of type `Error`.
@@ -114,293 +148,267 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
             }
             console.log(error)
           } finally {
-            //setLoading(false);
+          //setLoading(false);
           }
-        };
-    
-        fetchBlueprint();
-    }, []);
-
-
-    // 2
-    useEffect(() => {
-        // Function to fetch the input documents
-        const fetchData = async () => {
-            try {
-            // Fetch Data
-            
-            const dataResponse = await fetch(`${import.meta.env.VITE_API_URL}/_data/${portfolio}/${org}/${ring}/${toolId}`, {
-                method: 'GET',
-                headers: {
-                'Authorization': `Bearer ${sessionStorage.accessToken}`,
-                },
-            });
-            const response = await dataResponse.json();
-            setData(response);
-
-            
-        
-            } catch (err) {
-              if (err instanceof Error) {
-                setError(err);  // Now TypeScript knows `err` is of type `Error`.
-              } else {
-                setError(new Error("An unknown error occurred"));  // Handle other types
-              }
-              console.log(error)
-            } finally {
-            //setLoading(false);
-            }
-        };
-        
-        fetchData();
-    }, [org,refresh,toolId]);
-
-
-
-    
-    // 3
-    useEffect(() => {
-        const dictionary: FieldDictionary = {};
-        if (blueprint && blueprint.fields) {
-            blueprint.fields.forEach((field: BlueprintField) => {
-                dictionary[field.name] = field;
-            });
-        }
-        setFieldsDictionary(dictionary);
-    }, [blueprint]);
-
-
-    // Parse inputs JSON when data changes
-    useEffect(() => {
-        if (data?.['input']) {
-            try {
-                const parsedInput = JSON.parse(data['input']);
-                setInputs(parsedInput);
-                // Initialize input values with empty strings
-                const initialValues = Object.keys(parsedInput).reduce((acc, key) => {
-                    acc[key] = '';
-                    return acc;
-                }, {} as Record<string, string>);
-                setInputValues(initialValues);
-            } catch (e) {
-                //console.error('Error parsing inputs:', e);
-                setInputs({})
-                setInputValues({})
-            }
-        }
-    }, [data,toolId]);
-
+      };
       
-    // Function to update the state
-    const refreshTool = () => {
-        setRefresh(prev => !prev); // Toggle the `refresh` state to trigger useEffect
-        //refreshUp();
-    };
-
-    // Function to update the state
-    const statusTool = () => {
-        //setActiveGame(true);
-        setActiveOps(true);
-        
-    };
+      fetchData();
+  }, [org,refresh,toolId]);
 
 
 
-    const toolValueChange = (value: string) => {
-        console.log(`Tool changed!: ${value}`);
-        setToolId(value);
-        setResponse(null);
-        setErrorResponse(null);
-    };
+  
+  // 3
+  useEffect(() => {
+      const dictionary: FieldDictionary = {};
+      if (blueprint && blueprint.fields) {
+          blueprint.fields.forEach((field: BlueprintField) => {
+              dictionary[field.name] = field;
+          });
+      }
+      setFieldsDictionary(dictionary);
+  }, [blueprint]);
 
-    const handleInputChange = (key: string, value: string) => {
-        setInputValues(prev => ({
-            ...prev,
-            [key]: value
-        }));
-    };
+
+  // Parse inputs JSON when data changes
+  useEffect(() => {
+      if (data?.['input']) {
+          try {
+              const parsedInput = JSON.parse(data['input']);
+              setInputs(parsedInput);
+              // Initialize input values with empty strings
+              const initialValues = Object.keys(parsedInput).reduce((acc, key) => {
+                  acc[key] = '';
+                  return acc;
+              }, {} as Record<string, string>);
+              setInputValues(initialValues);
+          } catch (e) {
+              //console.error('Error parsing inputs:', e);
+              setInputs({})
+              setInputValues({})
+          }
+      }
+  }, [data,toolId]);
 
     
+  // Function to update the state
+  const refreshTool = () => {
+      setRefresh(prev => !prev); // Toggle the `refresh` state to trigger useEffect
+      //refreshUp();
+  };
 
-    const handleResponse = (responseData: any) => {
-        setResponse(responseData);
-    };
-
-    const handleError = (errorData: any) => {
-        setErrorResponse(errorData);
-    };
-
-    //---------------------------------------------------
-
-    const captions_troubleshoot = {
-      'response_ok_title':'Running tool',
-      'response_ok_content':'Tool has been executed',
-      'response_ko_title':'Tool has failed',
-      'response_ko_content':'Please check your parameters',
-      'dialog_title':data['name'],
-      'dialog_instructions':`${data['handler']}`,
-      'dialog_cta':'Run'
-    }
-
- 
-
-    return (
-
-    <>
-      <Card
-        className="mx-auto w-full sm:w-3/4 overflow-hidden"
-      > 
-        <CardHeader>
-          <CardTitle className="flex flex-col gap-6">
-            Tools
-            <DynamicSelect
-                label = 'Tool'
-                hint = ''
-                source = 'schd_tools:_id:name'
-                portfolio_id = {portfolio}
-                org_id = {org}
-                onValueChange = {toolValueChange}
-                default_value = 'Select a tool'
-            />
-          </CardTitle>
-        </CardHeader>
-        
-        {toolId && (
-          <>
-            <CardContent className="flex flex-col gap-12 p-6 text-sm max-h-[70vh] overflow-y-auto">  
-              <div className="grid gap-3">
-                <Card>
-                  <CardHeader>
-                            <div className="text-muted-foreground">
-                                Test function
-                            </div>                 
-                  </CardHeader> 
-                  <CardContent className="flex flex-col gap-3 items-center">
-                    <span className="flex flex-row justify-between w-full gap-6">
-                      <div className="flex-1 space-y-4">
-                          {Object.entries(inputs).map(([key, description]) => (
-                              <div key={key} className="flex flex-col space-y-2">
-                                  <label className="text-sm font-medium text-gray-700">
-                                      {description}
-                                  </label>
-                                  <Input
-                                      type="text"
-                                      value={inputValues[key] || ''}
-                                      onChange={(e) => handleInputChange(key, e.target.value)}
-                                      placeholder={`Enter ${key}`}
-                                  />
-                              </div>
-                          ))}
-                      </div>
-                      <div className="flex-1">
-                          Input:
-                          <pre className="text-sm bg-gray-100 p-2 rounded">
-                              {JSON.stringify(inputValues, null, 2)}
-                          </pre>
-                      </div>
-                      <div className="flex-1 gap-3">
-                          Output:
-                          <pre className="text-sm bg-gray-100 p-2 rounded">
-                              {JSON.stringify(response, null, 2)}
-                          </pre>
-                          
-                          {errorResponse && (
-                          <>
-                          Error:
-                          <pre className="text-sm bg-gray-100 p-2 rounded">
-                              {JSON.stringify(errorResponse, null, 2)}
-                          </pre>
-                          </>  
-
-                            )}
-                      </div>   
-                    </span>  
-                  
-                    
-                    <TriggerEndpoint
-                        path = {`${import.meta.env.VITE_API_URL}/_schd/${portfolio}/${org}/call/${data?.['handler']}`}
-                        method = 'POST'
-                        payload={inputValues}
-                        statusUp={statusTool}
-                        captions={captions_troubleshoot}
-                        onResponse={handleResponse}
-                        onError={handleError}
-                    />
-                    
-                  </CardContent>
-                  <CardFooter>
-
-                  </CardFooter>
-                </Card>
-
-                 
-              
-              
-              {Object.entries(data)
-                .sort(([keyA], [keyB]) => {
-                  const orderA = fieldsDictionary[keyA]?.order ?? Number.MAX_SAFE_INTEGER;
-                  const orderB = fieldsDictionary[keyB]?.order ?? Number.MAX_SAFE_INTEGER;
-                  return orderA - orderB;
-                })
-                .map(([key, value]) => (
-
-                  fieldsDictionary[key]?.widget !== 'image' && !key.startsWith('_') ? (
-                      <Card 
-                          key={key}
-                          
-                      >
-                        <CardHeader>
-                            <div className="text-muted-foreground">
-                                {fieldsDictionary[key]?.label}
-                            </div>                 
-                        </CardHeader>   
-                        <CardContent className="group flex items-center justify-between">
-                            <span className="flex items-center gap-1">
-                                <DialogPutWide
-                                    selectedKey={key} 
-                                    selectedValue={value} 
-                                    refreshUp={refreshTool}
-                                    blueprint={blueprint}
-                                    title='Edit attribute'
-                                    instructions={fieldsDictionary[key]?.hint ?? ''}
-                                    path={`${import.meta.env.VITE_API_URL}/_data/${portfolio}/${org}/${ring}/${toolId}`}
-                                    method='PUT'
-                                />
-                                <span className="whitespace-pre-wrap">
-                                  {blueprint?.rich?.[blueprint.sources?.[key]?.split(':')[0]]?.[value] ?? value}
-                                </span>
-                            </span>  
-                        </CardContent>  
-                        <CardFooter>
-                        {
-                          <span className="flex flex-row items-center gap-5">
-                            <CircleHelp className="h-3 w-3" />
-                            <div className="text-xs">
-                                  {fieldsDictionary[key]?.hint}
-                            </div>
-                          </span>
-                          
-                        }              
-                        </CardFooter>                   
-                             
-                      </Card>
-                  ) : null
+  // Function to update the state
+  const statusTool = () => {
+      //setActiveGame(true);
+      setActiveOps(true);
+      
+  };
 
 
-              ))}
-              
-            </div>   
-            
-            
-          </CardContent>
-          <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-            <div className="text-xs text-muted-foreground">
-              Last Updated <time dateTime="2023-11-23">{data._modified}</time>
-            </div>
-          </CardFooter>
-        </>
-        )}
-      </Card>
-    </> 
-    )
+
+  const toolValueChange = (value: string) => {
+      console.log(`Tool changed!: ${value}`);
+      setToolId(value);
+      setResponse(null);
+      setErrorResponse(null);
+  };
+
+  const handleInputChange = (key: string, value: string) => {
+      setInputValues(prev => ({
+          ...prev,
+          [key]: value
+      }));
+  };
+
+  
+
+  const handleResponse = (responseData: any) => {
+      setResponse(responseData);
+      setErrorResponse(null);
+  };
+
+  const handleError = (errorData: any) => {
+      setErrorResponse(errorData);
+      setResponse(null);
+  };
+
+  //---------------------------------------------------
+
+  const captions_troubleshoot = {
+    'response_ok_title':'Running tool',
+    'response_ok_content':'Tool has been executed',
+    'response_ko_title':'Tool has failed',
+    'response_ko_content':'Please check your parameters',
+    'dialog_title':data['name'],
+    'dialog_instructions':`${data['handler']}`,
+    'dialog_cta':'Run'
   }
+
+
+
+  return (
+
+  <>
+    <Card
+      className="mx-auto w-full sm:w-3/4 overflow-hidden"
+    > 
+      <CardHeader>
+        <CardTitle className="flex flex-col gap-6">
+          Tools
+          <DynamicSelect
+              label = 'Tool'
+              hint = ''
+              source = 'schd_tools:_id:name'
+              portfolio_id = {portfolio}
+              org_id = {org}
+              onValueChange = {toolValueChange}
+              default_value = 'Select a tool'
+          />
+        </CardTitle>
+      </CardHeader>
+      
+      {toolId && (
+        <>
+          <CardContent className="flex flex-col gap-12 p-6 text-sm max-h-[70vh] overflow-y-auto">  
+            <div className="grid gap-3">
+              <Card>
+                <CardHeader>
+                          <div className="text-muted-foreground">
+                              Test tool
+                          </div>                 
+                </CardHeader> 
+                <CardContent className="flex flex-col gap-3 items-center">
+                  <span className="flex flex-row justify-between w-full gap-6">
+                    <span className="flex flex-col gap-4">
+                      <div className="sticky top-0 bg-white z-10 space-y-4">
+                          <div className="flex-1 space-y-4">
+                              {Object.entries(inputs).map(([key, description]) => (
+                                  <div key={key} className="flex flex-col space-y-2">
+                                      <label className="text-sm font-medium text-gray-700">
+                                          {description}
+                                      </label>
+                                      <Input
+                                          type="text"
+                                          value={inputValues[key] || ''}
+                                          onChange={(e) => handleInputChange(key, e.target.value)}
+                                          placeholder={`Enter ${key}`}
+                                      />
+                                  </div>
+                              ))}
+                          </div>
+                          <div className="flex-1">
+                              Input:
+                              <pre className="text-sm bg-gray-100 p-2 rounded">
+                                  {JSON.stringify(inputValues, null, 2)}
+                              </pre>
+                          </div>
+                      </div>
+                    </span>
+                    
+                    <div className="flex-1 gap-3">
+                        Output:
+                        <pre className="text-sm bg-gray-100 p-2 rounded">
+                            {JSON.stringify(response, null, 2)}
+                        </pre>
+                        
+                        {errorResponse && (
+                        <>
+                        Error:
+                        <pre className="text-sm bg-gray-100 p-2 rounded">
+                            {JSON.stringify(errorResponse, null, 2)}
+                        </pre>
+                        </>  
+
+                          )}
+                    </div>   
+                  </span>  
+                
+                  
+                  <TriggerEndpoint
+                      path = {`${import.meta.env.VITE_API_URL}/_schd/${portfolio}/${org}/call/${data?.['handler']}`}
+                      method = 'POST'
+                      payload={inputValues}
+                      statusUp={statusTool}
+                      captions={captions_troubleshoot}
+                      onResponse={handleResponse}
+                      onError={handleError}
+                  />
+                  
+                </CardContent>
+                <CardFooter>
+
+                </CardFooter>
+              </Card>
+
+               
+            
+            
+            {Object.entries(data)
+              .sort(([keyA], [keyB]) => {
+                const orderA = fieldsDictionary[keyA]?.order ?? Number.MAX_SAFE_INTEGER;
+                const orderB = fieldsDictionary[keyB]?.order ?? Number.MAX_SAFE_INTEGER;
+                return orderA - orderB;
+              })
+              .map(([key, value]) => (
+                fieldsDictionary[key]?.widget !== 'image' && 
+                !key.startsWith('_') && 
+                (fieldsDictionary[key]?.layer ?? 0) == 1 ? (
+                    <Card 
+                        key={key}
+                        
+                    >
+                      <CardHeader>
+                          <div className="text-muted-foreground">
+                              {fieldsDictionary[key]?.label}
+                          </div>                 
+                      </CardHeader>   
+                      <CardContent className="group flex items-center justify-between">
+                          <span className="flex items-center gap-1">
+                              <DialogPutWide
+                                  selectedKey={key} 
+                                  selectedValue={value} 
+                                  refreshUp={refreshTool}
+                                  blueprint={blueprint}
+                                  title='Edit attribute'
+                                  instructions={fieldsDictionary[key]?.hint ?? ''}
+                                  path={`${import.meta.env.VITE_API_URL}/_data/${portfolio}/${org}/${ring}/${toolId}`}
+                                  method='PUT'
+                              />
+                              <span className="whitespace-pre-wrap">
+                                {blueprint?.rich?.[blueprint.sources?.[key]?.split(':')[0]]?.[value] ?? value}
+                              </span>
+                          </span>  
+                      </CardContent>  
+                      <CardFooter>
+                      {
+                        <span className="flex flex-row items-center gap-5">
+                          <CircleHelp className="h-3 w-3" />
+                          <div className="text-xs">
+                                {fieldsDictionary[key]?.hint}
+                          </div>
+                        </span>
+                        
+                      }              
+                      </CardFooter>                   
+                           
+                    </Card>
+                ) : null
+
+
+            ))}
+            
+          </div>   
+          
+          
+        </CardContent>
+        <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+          <div className="text-xs text-muted-foreground">
+            Last Updated <time dateTime="2023-11-23">{data._modified}</time>
+          </div>
+        </CardFooter>
+      </>
+      )}
+    </Card>
+  </> 
+  )
+}
