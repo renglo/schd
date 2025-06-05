@@ -302,6 +302,15 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                                   {JSON.stringify(inputValues, null, 2)}
                               </pre>
                           </div>
+                          <TriggerEndpoint
+                              path = {`${import.meta.env.VITE_API_URL}/_schd/${portfolio}/${org}/call/${data?.['handler']}`}
+                              method = 'POST'
+                              payload={inputValues}
+                              statusUp={statusTool}
+                              captions={captions_troubleshoot}
+                              onResponse={handleResponse}
+                              onError={handleError}
+                          />
                       </div>
                     </span>
                     
@@ -323,16 +332,6 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                     </div>   
                   </span>  
                 
-                  
-                  <TriggerEndpoint
-                      path = {`${import.meta.env.VITE_API_URL}/_schd/${portfolio}/${org}/call/${data?.['handler']}`}
-                      method = 'POST'
-                      payload={inputValues}
-                      statusUp={statusTool}
-                      captions={captions_troubleshoot}
-                      onResponse={handleResponse}
-                      onError={handleError}
-                  />
                   
                 </CardContent>
                 <CardFooter>
