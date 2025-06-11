@@ -1,5 +1,6 @@
 import {
   CircleHelp,
+  SquarePen,
 } from "lucide-react"
 
 
@@ -18,6 +19,7 @@ import { Input } from "@/components/ui/input";
 
 import DialogPutWide from '@/components/tank/dialog-put-wide'
 import DynamicSelect from '@/components/tank/dynamic-select'
+import DialogPost from "@/components/tank/dialog-post"
 
 
 import TriggerEndpoint from "@/components/tank/trigger-endpoint"
@@ -59,9 +61,9 @@ interface ToolDataCRUDProps {
 }
 
 
-export default function SchdActionProbe({ portfolio, org, tool }: ToolDataCRUDProps) {
+export default function SchdActionProbe({portfolio, org, tool}: ToolDataCRUDProps) {
 
-
+  const readonly = false;
   //const [data, setData] = useState({}); // State to hold table data
   const [data, setData] = useState<DataType>({});
 
@@ -262,8 +264,25 @@ export default function SchdActionProbe({ portfolio, org, tool }: ToolDataCRUDPr
     > 
       <CardHeader>
         <CardTitle className="flex flex-col gap-6">
-          Actions
+          <div className="flex flex-row gap-6">
+            Actions
+            <span className="ml-auto">
+            
+                {!readonly && (
+                    <DialogPost
+                        refreshUp={refreshAction}
+                        blueprint={blueprint}
+                        title={`Create a new Action`}
+                        instructions="Provide the name, id and goal. The id is not editable."
+                        path={`${import.meta.env.VITE_API_URL}/_data/${portfolio}/${org}/${ring}`}
+                        method='POST'
+                    />
+                )}  
+                          
+            </span>
+          </div>
           <DynamicSelect
+              key={refresh} // Add key prop that changes when refreshAction is called
               label = 'Action'
               hint = ''
               source = 'schd_actions:_id:name'
@@ -272,6 +291,7 @@ export default function SchdActionProbe({ portfolio, org, tool }: ToolDataCRUDPr
               onValueChange = {actionValueChange}
               default_value = 'Select an action'
           />
+
         </CardTitle>
       </CardHeader>
       
@@ -283,7 +303,7 @@ export default function SchdActionProbe({ portfolio, org, tool }: ToolDataCRUDPr
                 <CardHeader>
                           <div className="text-muted-foreground">
                               Test Action
-                          </div>                 
+                          </div>               
                 </CardHeader> 
                 <CardContent className="flex flex-col gap-3 items-center">
                   <span className="flex flex-row justify-between w-full gap-6">
@@ -344,13 +364,10 @@ export default function SchdActionProbe({ portfolio, org, tool }: ToolDataCRUDPr
                   
                 </CardContent>
                 <CardFooter>
-
+                  
                 </CardFooter>
-              </Card>
+              </Card> 
 
-               
-            
-            
             {Object.entries(data)
               .sort(([keyA], [keyB]) => {
                 const orderA = fieldsDictionary[keyA]?.order ?? Number.MAX_SAFE_INTEGER;
@@ -404,8 +421,18 @@ export default function SchdActionProbe({ portfolio, org, tool }: ToolDataCRUDPr
 
 
             ))}
-            
-          </div>   
+
+            <span className="flex flex-row items-center gap-5 justify-end w-full">
+                <SquarePen size={20} color="#a6a0a0" className="h-3 w-3" />
+                <div className="text-xs">
+                  <a href={`/${portfolio}/${org}/schd/schd_actions`}>
+                      Edit all actions in detail
+                  </a>
+                </div>
+            </span>
+          </div>  
+
+          
           
           
         </CardContent>
