@@ -244,6 +244,10 @@ import {
   
       };
   
+      // Check if portfolio options are available
+      const portfolioField = modifiedBlueprint.fields?.find(field => field.name === 'portfolio');
+      const hasPortfolioOptions = portfolioField?.options && Object.keys(portfolioField.options).length > 0;
+  
       return (
      
         <>
@@ -260,15 +264,21 @@ import {
 
               <div className="flex flex-row gap-3 text-xs text-muted-foreground">
                 <div>This will install the app in an existing portfolio </div>
-                <DialogPost
-                    refreshUp={refreshAction}
-                    blueprint={modifiedBlueprint}
-                    title={`Activate your portfolio`}
-                    instructions="Please fill the following fields:"
-                    path={`${import.meta.env.VITE_API_URL}/_schd/run/schd/schd_onboardings`}
-                    method='POST'
-                    buttontext='Install'
-                />
+                {hasPortfolioOptions ? (
+                  <DialogPost
+                      refreshUp={refreshAction}
+                      blueprint={modifiedBlueprint}
+                      title={`Activate your portfolio`}
+                      instructions="Please fill the following fields:"
+                      path={`${import.meta.env.VITE_API_URL}/_schd/run/schd/schd_onboardings`}
+                      method='POST'
+                      buttontext='Install'
+                  />
+                ) : (
+                  <div className="text-red-500 font-medium">
+                    No portfolio(s) available. Create one first.
+                  </div>
+                )}
               </div>             
             </CardContent>             
           </Card> 
