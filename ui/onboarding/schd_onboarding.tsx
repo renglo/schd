@@ -263,7 +263,7 @@ import {
               
 
               <div className="flex flex-row gap-3 text-xs text-muted-foreground">
-                <div>This will install the app in an existing portfolio </div>
+                <div>This will install the Scheduler App in an existing portfolio </div>
                 {hasPortfolioOptions ? (
                   <DialogPost
                       refreshUp={refreshAction}
