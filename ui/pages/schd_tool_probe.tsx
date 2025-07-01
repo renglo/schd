@@ -15,6 +15,7 @@ CardTitle,
 
 import { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 import DialogPutWide from '@/components/tank/dialog-put-wide'
 import DynamicSelect from '@/components/tank/dynamic-select'
@@ -175,13 +176,31 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
       if (data?.['input']) {
           try {
               const parsedInput = JSON.parse(data['input']);
-              setInputs(parsedInput);
-              // Initialize input values with empty strings
-              const initialValues = Object.keys(parsedInput).reduce((acc, key) => {
-                  acc[key] = '';
-                  return acc;
-              }, {} as Record<string, string>);
-              setInputValues(initialValues);
+              
+              // Handle new format: array of objects with name, hint, type, required
+              if (Array.isArray(parsedInput)) {
+                  const inputFields = parsedInput.reduce((acc, field) => {
+                      acc[field.name] = field;
+                      return acc;
+                  }, {} as Record<string, any>);
+                  setInputs(inputFields);
+                  
+                  // Initialize input values with empty strings
+                  const initialValues = parsedInput.reduce((acc, field) => {
+                      acc[field.name] = '';
+                      return acc;
+                  }, {} as Record<string, string>);
+                  setInputValues(initialValues);
+              } else {
+                  // Handle old format: simple object with field names as keys
+                  setInputs(parsedInput);
+                  // Initialize input values with empty strings
+                  const initialValues = Object.keys(parsedInput).reduce((acc, key) => {
+                      acc[key] = '';
+                      return acc;
+                  }, {} as Record<string, string>);
+                  setInputValues(initialValues);
+              }
           } catch (e) {
               //console.error('Error parsing inputs:', e);
               setInputs({})
@@ -214,9 +233,11 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
   };
 
   const handleInputChange = (key: string, value: string) => {
+      // Eliminate unnecessary tab whitespace and normalize whitespace
+      const cleanedValue = value.replace(/\t/g, ' ').replace(/\s+/g, ' ').trim();
       setInputValues(prev => ({
           ...prev,
-          [key]: value
+          [key]: cleanedValue
       }));
   };
 
@@ -279,26 +300,45 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                 </CardHeader> 
                 <CardContent className="flex flex-col gap-3 items-center">
                   <span className="flex flex-row justify-between w-full gap-6">
-                    <span className="flex flex-col gap-4">
+                    <span className="flex flex-col gap-4 w-1/2">
                       <div className="sticky top-0 bg-white z-10 space-y-4">
                           <div className="flex-1 space-y-4">
-                              {Object.entries(inputs).map(([key, description]) => (
-                                  <div key={key} className="flex flex-col space-y-2">
-                                      <label className="text-sm font-medium text-gray-700">
-                                          {description}
-                                      </label>
-                                      <Input
-                                          type="text"
-                                          value={inputValues[key] || ''}
-                                          onChange={(e) => handleInputChange(key, e.target.value)}
-                                          placeholder={`Enter ${key}`}
-                                      />
-                                  </div>
-                              ))}
+                              {Object.entries(inputs).map(([key, field]) => {
+                                  // Handle new format: field is an object with name, hint, type, required
+                                  const fieldName = typeof field === 'object' && field !== null ? field.name || key : key;
+                                  const fieldHint = typeof field === 'object' && field !== null ? field.hint || field : field;
+                                  const fieldType = typeof field === 'object' && field !== null ? field.type || 'text' : 'text';
+                                  const isRequired = typeof field === 'object' && field !== null ? field.required || false : false;
+                                  
+                                  return (
+                                      <div key={key} className="flex flex-col space-y-2">
+                                          <label className="text-sm font-medium text-gray-700">
+                                              {fieldHint}
+                                              {isRequired && <span className="text-red-500 ml-1">*</span>}
+                                          </label>
+                                          {fieldType === 'array' || fieldType === 'object' ? (
+                                              <Textarea
+                                                  value={inputValues[fieldName] || ''}
+                                                  onChange={(e) => handleInputChange(fieldName, e.target.value)}
+                                                  placeholder={`Enter ${fieldName}`}
+                                                  required={isRequired}
+                                              />
+                                          ) : (
+                                              <Input
+                                                  type={fieldType}
+                                                  value={inputValues[fieldName] || ''}
+                                                  onChange={(e) => handleInputChange(fieldName, e.target.value)}
+                                                  placeholder={`Enter ${fieldName}`}
+                                                  required={isRequired}
+                                              />
+                                          )}
+                                      </div>
+                                  );
+                              })}
                           </div>
                           <div className="flex-1">
                               Input:
-                              <pre className="text-sm bg-gray-100 p-2 rounded">
+                              <pre className="text-sm bg-gray-100 p-2 rounded whitespace-pre-wrap break-words overflow-x-auto max-w-full">
                                   {JSON.stringify(inputValues, null, 2)}
                               </pre>
                           </div>
@@ -316,14 +356,14 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                     
                     <div className="flex-1 gap-3">
                         Output:
-                        <pre className="text-sm bg-gray-100 p-2 rounded">
+                        <pre className="text-sm bg-gray-100 p-2 rounded whitespace-pre-wrap break-words overflow-x-auto max-w-full">
                             {JSON.stringify(response, null, 2)}
                         </pre>
                         
                         {errorResponse && (
                         <>
                         Error:
-                        <pre className="text-sm bg-gray-100 p-2 rounded">
+                        <pre className="text-sm bg-gray-100 p-2 rounded whitespace-pre-wrap break-words overflow-x-auto max-w-full">
                             {JSON.stringify(errorResponse, null, 2)}
                         </pre>
                         </>  
