@@ -4,6 +4,7 @@ import {
   TimerReset,
   Wrench,
   Zap,
+  MessagesSquare,
 } from "lucide-react"
 
 import {
@@ -28,9 +29,75 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
           className={
             (!org || org=='settings' )
               ? 'hidden' 
-              : 'flex flex-col items-center gap-4 px-1 sm:py-4'
+              : 'flex flex-col items-center gap-1 px-1 sm:py-4'
           }  
         >           
+          
+          <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="hidden flex items-center flex-col">
+                    <button
+                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/agent`)}
+                      className={
+                        section === 'agent'
+                          ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
+                          : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
+                      }
+                    >
+                        <MessagesSquare color="#19baf0" className="h-5 w-5" />
+                        <span className="sr-only">Agent</span>
+                    </button>
+                    <span className="text-xxs ">Agent</span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">Agent</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="hidden flex items-center flex-col">
+                    <button
+                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/action`)}
+                      className={
+                        section === 'action'
+                          ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
+                          : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
+                      }
+                    >
+                        <Zap color="#19baf0" className="h-5 w-5" />
+                        <span className="sr-only">Action</span>
+                    </button>
+                    <span className="text-xxs ">Action</span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">Action</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="hidden flex items-center flex-col">
+                    <button
+                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/tool`)}
+                      className={
+                        section === 'tool'
+                          ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
+                          : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
+                      }
+                    >
+                        <Wrench color="#19baf0" className="h-5 w-5" />
+                        <span className="sr-only">Tool</span>
+                    </button>
+                    <span className="text-xxs ">Tool</span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">Tool</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <hr/>
           
           <TooltipProvider>
             <Tooltip>
@@ -137,53 +204,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipContent side="right">Tools</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center flex-col">
-                    <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/action`)}
-                      className={
-                        section === 'action'
-                          ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
-                          : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
-                      }
-                    >
-                        <Zap color="#19baf0" className="h-5 w-5" />
-                        <span className="sr-only">Action</span>
-                    </button>
-                    <span className="text-xxs ">Action</span>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="right">Action</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center flex-col">
-                    <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/tool`)}
-                      className={
-                        section === 'tool'
-                          ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
-                          : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
-                      }
-                    >
-                        <Wrench color="#19baf0" className="h-5 w-5" />
-                        <span className="sr-only">Tool</span>
-                    </button>
-                    <span className="text-xxs ">Tool</span>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="right">Tool</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          
-
-          
+  
           
         </nav>
       )

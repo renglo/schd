@@ -247,6 +247,10 @@ import {
       // Check if portfolio options are available
       const portfolioField = modifiedBlueprint.fields?.find(field => field.name === 'portfolio');
       const hasPortfolioOptions = portfolioField?.options && Object.keys(portfolioField.options).length > 0;
+
+      console.log('modifiedBlueprint:',modifiedBlueprint);
+      console.log('portfolioField:',portfolioField);
+      console.log('hasPortfolioOptions:',hasPortfolioOptions);
   
       return (
      

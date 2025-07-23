@@ -7,6 +7,7 @@ import {
     EllipsisVertical,
     Wrench,
     Zap,
+    MessagesSquare,
   } from "lucide-react"
   
   import { Input } from "@/components/ui/input"
@@ -39,6 +40,7 @@ import {
               <SheetContent side="left" className="sm:max-w-xs">
                 
               <nav className="grid gap-6 text-lg font-medium">
+
                   <button
                       onClick={() => {
                           setOpen(false);
@@ -50,6 +52,41 @@ import {
                       <img src={`${import.meta.env.VITE_WL_LOGO}`} className="ml-auto h-12 w-12" alt="Logo" />
                       <span className="sr-only">Logo</span>
                   </button> 
+
+
+                   <button 
+                        onClick={() => {
+                            setOpen(false);
+                            onNavigate(`/${portfolio}/${org}/schd/agent`);
+                        }}
+                        className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                    >
+                        <MessagesSquare color="#19baf0" className="h-5 w-5" />
+                        Agent
+                  </button>
+                  <button 
+                        onClick={() => {
+                            setOpen(false);
+                            onNavigate(`/${portfolio}/${org}/schd/actions`);
+                        }}
+                        className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                    >
+                        <Zap color="#19baf0" className="h-5 w-5" />
+                        Actions
+                  </button>
+                  <button 
+                      onClick={() => {
+                          setOpen(false);
+                          onNavigate(`/${portfolio}/${org}/schd/tools`);
+                      }}
+                      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                      <Wrench color="#19baf0" className="h-5 w-5" />
+                      Tools
+                  </button>
+
+                  <hr/>
+
                   <button
                       onClick={() => {
                           setOpen(false);
