@@ -29,7 +29,7 @@ Example:
     "schd": "1.0.0",
     "maker": "1.0.0"
   },
-  "bootstrap":"maker"
+  "bootstrap":["maker"]
 }
 
 

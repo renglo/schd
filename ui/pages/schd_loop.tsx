@@ -520,6 +520,8 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
                               key_id={idx}
                               item={item}
                             />
+                          ) : (item['_type'] === 'tool_rs' ) ? (
+                            <></>
                           ) : (
                             <ChatWidgetText
                               key_id={idx}
