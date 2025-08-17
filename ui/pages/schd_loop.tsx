@@ -126,7 +126,7 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
           try {
 
             // Get list of threads
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${entity_type}/${entity_id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${portfolio}/${org}/${entity_type}/${entity_id}`, {
               method: 'GET',
               headers: { 'Authorization': `Bearer ${sessionStorage.accessToken}` },
             });
@@ -147,7 +147,7 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
               setActiveThread(activeT._id);
             } else {
               // If there is no active thread, create a new one
-              const newThreadResponse = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${entity_type}/${entity_id}`, {
+              const newThreadResponse = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${portfolio}/${org}/${entity_type}/${entity_id}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${sessionStorage.accessToken}` },
               });
@@ -176,7 +176,7 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
         }
 
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${entity_type}/${entity_id}/${activeThread}/messages`, {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${portfolio}/${org}/${entity_type}/${entity_id}/${activeThread}/messages`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${sessionStorage.accessToken}` },
           });
@@ -203,7 +203,7 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
   
           try {
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${entity_type}/${entity_id}/${activeThread}/workspaces`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${portfolio}/${org}/${entity_type}/${entity_id}/${activeThread}/workspaces`, {
               method: 'GET',
               headers: { 'Authorization': `Bearer ${sessionStorage.accessToken}` },
             });
@@ -267,7 +267,7 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
     
     const threadAction = async (switch_thread: any) => {
       if (switch_thread == 'new_thread'){
-        const newThreadResponse = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${entity_type}/${entity_id}`, {
+        const newThreadResponse = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${portfolio}/${org}/${entity_type}/${entity_id}`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${sessionStorage.accessToken}` },
         });
@@ -278,7 +278,7 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
           setActiveThread(document._id);
         }
       } else if (switch_thread === 'new_workspace') {
-        const newWorkspaceResponse = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${entity_type}/${entity_id}/${activeThread}/workspaces`, {
+        const newWorkspaceResponse = await fetch(`${import.meta.env.VITE_API_URL}/_chat/${portfolio}/${org}/${entity_type}/${entity_id}/${activeThread}/workspaces`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${sessionStorage.accessToken}` },
         });
@@ -296,15 +296,6 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
       }
     };
 
-
-    /*const payload_chat_message_x =  {
-      'action':'message',
-      'portfolio':portfolio,
-      'org':org,
-      'entity_type':entity_type,
-      'entity_id':entity_id,
-      'thread':activeThread
-    }*/
     
     
     const payload_chat_message = {
