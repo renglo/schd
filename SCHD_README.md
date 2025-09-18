@@ -29,7 +29,7 @@ Example:
     "schd": "1.0.0",
     "maker": "1.0.0"
   },
-  "bootstrap":"maker"
+  "bootstrap":["maker"]
 }
 
 
@@ -50,4 +50,6 @@ If you are in dev, run this.
 
 4. Run the Onboarding script that creates the entities
 
+- Go to /account and look for the 'Scheduler App' card. 
+- Follow the instructions.
 
