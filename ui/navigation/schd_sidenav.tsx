@@ -36,7 +36,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
           <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="hidden flex items-center flex-col">
+                  <div className="flex items-center flex-col">
                     <button
                       onClick={() => onNavigate(`/${portfolio}/${org}/schd/agent`)}
                       className={

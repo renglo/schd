@@ -233,8 +233,8 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
   };
 
   const handleInputChange = (key: string, value: string) => {
-      // Eliminate unnecessary tab whitespace and normalize whitespace
-      const cleanedValue = value.replace(/\t/g, ' ').replace(/\s+/g, ' ').trim();
+      // Only normalize tabs to spaces, but preserve all other whitespace
+      const cleanedValue = value.replace(/\t/g, ' ');
       setInputValues(prev => ({
           ...prev,
           [key]: cleanedValue

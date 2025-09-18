@@ -2,7 +2,6 @@ import ToolDataCRUD from "../../../tools/data/ui/pages/tool_data_crud"
 import SchdActionProbe from "../../../tools/schd/ui/pages/schd_action_probe"
 import SchdToolProbe from "../../../tools/schd/ui/pages/schd_tool_probe"
 import SchdLoop from "../../../tools/schd/ui/pages/schd_loop"
-import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 
 
@@ -33,16 +32,14 @@ export default function Schd({ portfolio, org, tool, section, tree, query }: {
   query?: Record<string, string>; // query args in the url (if any)
 }) {
  
-    const navigate = useNavigate();
-
     console.log('Schd > Section:',section)
 
     // If undefined. It should be redirected to /agent
     useEffect(() => {
         if (!section) {
-            navigate(`/${portfolio}/${org}/schd/agent`);
+            window.location.href = `/${portfolio}/${org}/schd/agent`;
         }
-    }, [section, navigate, portfolio, org, tool]);
+    }, [section, portfolio, org, tool]);
 
     // Don't render anything if section is undefined (will redirect)
     if (!section) {
