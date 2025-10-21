@@ -512,7 +512,9 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
                               item={item}
                             />
                           ) : (item['_type'] === 'tool_rs' ) ? (
-                            <></>
+                            <>
+                              <span className="block text-center py-10">[PLACEHOLDER: SPECIALIZED WIDGET]</span>
+                            </>
                           ) : (
                             <ChatWidgetText
                               key_id={idx}
