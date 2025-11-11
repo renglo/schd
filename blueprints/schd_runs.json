@@ -128,6 +128,6 @@
     "public": true,
     "status": "final",
     "singleton":false,
-    "uri": "https://tank7075.helloirma.com/_blueprint/irma/schd_runs/1.0.1",
+    "uri": "https://helloirma.com/_blueprint/irma/schd_runs/1.0.1",
     "version": "0.0.1"
 }
