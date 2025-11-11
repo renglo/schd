@@ -1,0 +1,8 @@
+# Scheduler Handlers Requirements
+
+# Core dependencies
+requests>=2.32.0  # HTTP requests
+
+# Tank library (required for integration)
+# Install via: pip install -e ../../dev/renglo-lib
+

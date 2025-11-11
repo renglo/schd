@@ -3,10 +3,11 @@ from flask import current_app
 
 from datetime import datetime
 
-from app_data.data_controller import DataController
-from app_docs.docs_controller import DocsController
-from app_auth.auth_controller import AuthController
-from app_blueprint.blueprint_controller import BlueprintController
+from renglo.data.data_controller import DataController
+from renglo.docs.docs_controller import DocsController
+from renglo.auth.auth_controller import AuthController
+from renglo.blueprint.blueprint_controller import BlueprintController
+from renglo.common import load_config
 
 
 '''
@@ -18,11 +19,13 @@ Nnothing should happen if it is run multiple times.
 
 class SchdOnboardings:
     def __init__(self):
+        # Load config for handlers (independent of Flask)
+        config = load_config()
         
-        self.DAC = DataController()
-        self.AUC = AuthController()
-        self.DCC = DocsController()
-        self.BPC = BlueprintController()
+        self.DAC = DataController(config=config)
+        self.AUC = AuthController(config=config)
+        self.DCC = DocsController(config=config)
+        self.BPC = BlueprintController(config=config)
         self.bridge = {}
           
         
