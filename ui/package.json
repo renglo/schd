@@ -1,0 +1,20 @@
+{
+  "name": "@console-plugins/scheduler",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./schd.tsx",
+  "exports": {
+    ".": "./schd.tsx",
+    "./ui/*": "./*",
+    "./ui/navigation/*": "./navigation/*",
+    "./ui/onboarding/*": "./onboarding/*"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "lucide-react": "^0.426.0"
+  }
+}
+

@@ -17,11 +17,11 @@ import { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-import DialogPutWide from '@/components/tank/dialog-put-wide'
-import DynamicSelect from '@/components/tank/dynamic-select'
+import DialogPutWide from '@/components/console/dialog-put-wide'
+import DynamicSelect from '@/components/console/dynamic-select'
 
 
-import TriggerEndpoint from "@/components/tank/trigger-endpoint"
+import TriggerEndpoint from "@/components/console/trigger-endpoint"
 
 
 interface Blueprint {

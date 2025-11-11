@@ -7,7 +7,7 @@ import {
   } from "@/components/ui/card"
   
   import { useState, useEffect} from 'react';
-  import DialogPost from "@/components/tank/dialog-post"
+  import DialogPost from "@/components/console/dialog-post"
   
   interface Blueprint {
       label: string;
@@ -121,7 +121,7 @@ import {
       "public": true,
       "singleton": false,
       "status": "final",
-      "uri": "https://tank7075.helloirma.com/_blueprint/irma/maker_onboardings/1.0.1",
+      "uri": "https://helloirma.com/_blueprint/irma/maker_onboardings/1.0.1",
       "version": "0.0.1"
   }
   

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import ChatHistory from "@/components/tank/chat-history"
-import ChatInput from "@/components/tank/chat-input"
+import ChatHistory from "@/components/console/chat-history"
+import ChatInput from "@/components/console/chat-input"
 import { Badge } from "@/components/ui/badge"
-import ChatWidgetJson from "@/components/tank/chat-widget-json"
-import ChatWidgetText from "@/components/tank/chat-widget-text"
-import ChatWidgetCommand from "@/components/tank/chat-widget-command"
-import ChatWidgetWorkspace from "@/components/tank/chat-widget-workspace"
+import ChatWidgetJson from "@/components/console/chat-widget-json"
+import ChatWidgetText from "@/components/console/chat-widget-text"
+import ChatWidgetCommand from "@/components/console/chat-widget-command"
+import ChatWidgetWorkspace from "@/components/console/chat-widget-workspace"
 
 
 import { 

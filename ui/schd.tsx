@@ -1,7 +1,7 @@
-import ToolDataCRUD from "../../../tools/data/ui/pages/tool_data_crud"
-import SchdActionProbe from "../../../tools/schd/ui/pages/schd_action_probe"
-import SchdToolProbe from "../../../tools/schd/ui/pages/schd_tool_probe"
-import SchdLoop from "../../../tools/schd/ui/pages/schd_loop"
+import ToolDataCRUD from "@extensions/data/ui/pages/tool_data_crud"
+import SchdActionProbe from "@extensions/schd/ui/pages/schd_action_probe"
+import SchdToolProbe from "@extensions/schd/ui/pages/schd_tool_probe"
+import SchdLoop from "@extensions/schd/ui/pages/schd_loop"
 import { useEffect } from "react"
 
 
@@ -32,7 +32,7 @@ export default function Schd({ portfolio, org, tool, section, tree, query }: {
   query?: Record<string, string>; // query args in the url (if any)
 }) {
  
-    console.log('Schd > Section:',section)
+    console.log('SCHD >> Portfolio/Org/Tool/Section',portfolio,org,tool,section);
 
     // If undefined. It should be redirected to /agent
     useEffect(() => {
