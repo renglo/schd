@@ -1,5 +1,5 @@
 {
-  "name": "@console-plugins/scheduler",
+  "name": "@renglo/scheduler",
   "version": "1.0.0",
   "private": true,
   "type": "module",
