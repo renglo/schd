@@ -1,7 +1,7 @@
-import ToolDataCRUD from "@extensions/data/ui/pages/tool_data_crud"
-import SchdActionProbe from "@extensions/schd/ui/pages/schd_action_probe"
-import SchdToolProbe from "@extensions/schd/ui/pages/schd_tool_probe"
-import SchdLoop from "@extensions/schd/ui/pages/schd_loop"
+import ToolDataCRUD from "@renglo/data/pages/tool_data_crud"
+import SchdActionProbe from "@renglo/schd/pages/schd_action_probe"
+import SchdToolProbe from "@renglo/schd/pages/schd_tool_probe"
+import SchdLoop from "@renglo/schd/pages/schd_loop"
 import { useEffect } from "react"
 
 
