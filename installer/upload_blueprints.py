@@ -8,8 +8,9 @@ from pathlib import Path
 
 
 '''
-    USAGE
-    python upload_blueprints.py <env_name> --aws-profile <profile_name> --aws-region us-east-1  
+    USAGE  
+    python upload_blueprints.py <env> --aws-profile <profile> --aws-region <region>
+    python upload_blueprints.py <env> --aws-profile <profile> --aws-region <region> --blueprint <blueprint>
 '''
 
 def get_available_aws_profiles():
@@ -35,9 +36,22 @@ def get_available_aws_profiles():
     return profiles if profiles else ["default"]
 
 
+def get_profile_region(profile_name: str) -> str:
+    """Get the region for a given AWS profile from ~/.aws/config"""
+    config = configparser.ConfigParser()
+    config_path = os.path.expanduser("~/.aws/config")
+    
+    if os.path.exists(config_path):
+        config.read(config_path)
+        profile_section = f"profile {profile_name}" if profile_name != "default" else "default"
+        if profile_section in config and "region" in config[profile_section]:
+            return config[profile_section]["region"]
+    
+    return "us-east-1"  # Default region if not specified
 
-def load_blueprint_files() -> List[Dict]:
-    """Load all JSON files from the blueprints directory."""
+
+def load_blueprint_files(blueprint_name: str = None) -> List[Dict]:
+    """Load JSON files from the blueprints directory."""
     current_dir = Path(__file__).parent
     blueprints_dir = current_dir / "blueprints"
     
@@ -48,21 +62,38 @@ def load_blueprint_files() -> List[Dict]:
             raise FileNotFoundError(f"Blueprints directory not found in current or parent directory")
 
     blueprints = []
-    for json_file in blueprints_dir.glob("*.json"):
+    
+    # If blueprint_name is specified, only load that specific file
+    if blueprint_name:
+        json_file = blueprints_dir / f"{blueprint_name}.json"
+        if not json_file.exists():
+            raise FileNotFoundError(f"Blueprint file '{blueprint_name}.json' not found in {blueprints_dir}")
+        
         try:
             with open(json_file, 'r') as f:
                 blueprint = json.load(f)
                 # Add filename (without extension) as the IRN if not present
                 if 'irn' not in blueprint:
                     blueprint['irn'] = f'irn:blueprint:irma:{json_file.stem}'
-                    
-                
-                    
                 blueprints.append(blueprint)
         except json.JSONDecodeError as e:
             print(f"⚠️  Error parsing {json_file.name}: {str(e)}")
         except Exception as e:
             print(f"⚠️  Error reading {json_file.name}: {str(e)}")
+    else:
+        # Load all JSON files
+        for json_file in blueprints_dir.glob("*.json"):
+            try:
+                with open(json_file, 'r') as f:
+                    blueprint = json.load(f)
+                    # Add filename (without extension) as the IRN if not present
+                    if 'irn' not in blueprint:
+                        blueprint['irn'] = f'irn:blueprint:irma:{json_file.stem}'
+                    blueprints.append(blueprint)
+            except json.JSONDecodeError as e:
+                print(f"⚠️  Error parsing {json_file.name}: {str(e)}")
+            except Exception as e:
+                print(f"⚠️  Error reading {json_file.name}: {str(e)}")
     
     return blueprints
 
@@ -113,7 +144,7 @@ def upload_blueprints(dynamodb, table_name: str, blueprints: List[Dict]) -> Dict
 
     return results
 
-def run(env_name: str, aws_profile: str, region: str = None) -> Dict[str, List[str]]:
+def run(env_name: str, aws_profile: str, region: str = None, blueprint_name: str = None) -> Dict[str, List[str]]:
     """Programmatic entry point that returns structured data"""
     # Get region from profile if not specified
     if region is None:
@@ -126,9 +157,13 @@ def run(env_name: str, aws_profile: str, region: str = None) -> Dict[str, List[s
     print(f"🔄 Using AWS Profile: {aws_profile} in region {region}")
     
     # Load blueprints from JSON files
-    print("📂 Loading blueprint files...")
-    blueprints = load_blueprint_files()
-    print(f"📋 Found {len(blueprints)} blueprint files")
+    if blueprint_name:
+        print(f"📂 Loading blueprint file: {blueprint_name}.json...")
+    else:
+        print("📂 Loading blueprint files...")
+    
+    blueprints = load_blueprint_files(blueprint_name)
+    print(f"📋 Found {len(blueprints)} blueprint file(s)")
 
     # Upload blueprints to DynamoDB
     table_name = f"{env_name}_blueprints"
@@ -155,11 +190,16 @@ def main():
         type=str,
         help="AWS region to use (defaults to profile's region or us-east-1)"
     )
+    parser.add_argument(
+        "--blueprint",
+        type=str,
+        help="Upload only a specific blueprint by name (without .json extension)"
+    )
 
     args = parser.parse_args()
     
     # Run the upload
-    results = run(args.environment_name, args.aws_profile, args.aws_region)
+    results = run(args.environment_name, args.aws_profile, args.aws_region, args.blueprint)
     
     # Print results
     print("\n📊 Upload Summary:")
