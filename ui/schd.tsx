@@ -37,7 +37,7 @@ export default function Schd({ portfolio, org, tool, section, tree, query }: {
     // If undefined. It should be redirected to /agent
     useEffect(() => {
         if (!section) {
-            window.location.href = `/${portfolio}/${org}/schd/agent`;
+            window.location.href = `/${portfolio}/${org}/schd/tool`;
         }
     }, [section, portfolio, org, tool]);
 
