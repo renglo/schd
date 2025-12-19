@@ -189,6 +189,20 @@
     "semantic": "isd:slots",
     "type": "string",
     "widget": "textarea"
+   },
+   {
+    "cardinality": "single",
+    "default": "_",
+    "hint": "Tool that runs to check if this action has been finished",
+    "label": "Verification",
+    "layer": "1",
+    "multilingual": false,
+    "name": "verification",
+    "order": "14",
+    "required": false,
+    "semantic": "isd:reference",
+    "type": "string",
+    "widget": "textarea"
    }
   ],
   "handle": "irma",
