@@ -181,7 +181,7 @@
     "default": "_",
     "hint": "Data needed to perform the action",
     "label": "Slots",
-    "layer": "3",
+    "layer": "1",
     "multilingual": false,
     "name": "slots",
     "order": "13",
