@@ -174,11 +174,45 @@ export default function SchdActionProbe({portfolio, org, tool}: ToolDataCRUDProp
   }, [blueprint]);
 
 
+  // Helper function to safely parse input that might be JSON or Python-style string
+  const safeParseInput = (input: any): any => {
+      // If it's already an array or object, return as is
+      if (Array.isArray(input) || (typeof input === 'object' && input !== null)) {
+          return input;
+      }
+      
+      // If it's not a string, return null
+      if (typeof input !== 'string') {
+          return null;
+      }
+      
+      // Try parsing as JSON first
+      try {
+          return JSON.parse(input);
+      } catch (e) {
+          // If JSON parse fails, try converting Python-style single quotes to double quotes
+          try {
+              // Replace single quotes with double quotes, but be careful with apostrophes in text
+              // This handles: {'name': 'value'} -> {"name": "value"}
+              const jsonString = input
+                  .replace(/'/g, '"')           // Replace all single quotes with double quotes
+                  .replace(/True/g, 'true')     // Python True -> JSON true
+                  .replace(/False/g, 'false')   // Python False -> JSON false
+                  .replace(/None/g, 'null');    // Python None -> JSON null
+              return JSON.parse(jsonString);
+          } catch (e2) {
+              console.error('Error parsing input:', e2);
+              return null;
+          }
+      }
+  };
+
   // Parse slots JSON when data changes
   useEffect(() => {
       if (data?.['slots']) {
-          try {
-              const parsedSlots = JSON.parse(data['slots']);
+          const parsedSlots = safeParseInput(data['slots']);
+          
+          if (parsedSlots) {
               setSlots(parsedSlots);
               // Initialize slot values with empty strings
               const initialValues = Object.keys(parsedSlots).reduce((acc, key) => {
@@ -186,8 +220,7 @@ export default function SchdActionProbe({portfolio, org, tool}: ToolDataCRUDProp
                   return acc;
               }, {} as Record<string, string>);
               setSlotValues(initialValues);
-          } catch (e) {
-              //console.error('Error parsing slots:', e);
+          } else {
               setSlots({})
               setSlotValues({})
           }

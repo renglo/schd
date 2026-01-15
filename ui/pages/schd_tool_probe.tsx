@@ -171,12 +171,45 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
   }, [blueprint]);
 
 
+  // Helper function to safely parse input that might be JSON or Python-style string
+  const safeParseInput = (input: any): any => {
+      // If it's already an array or object, return as is
+      if (Array.isArray(input) || (typeof input === 'object' && input !== null)) {
+          return input;
+      }
+      
+      // If it's not a string, return null
+      if (typeof input !== 'string') {
+          return null;
+      }
+      
+      // Try parsing as JSON first
+      try {
+          return JSON.parse(input);
+      } catch (e) {
+          // If JSON parse fails, try converting Python-style single quotes to double quotes
+          try {
+              // Replace single quotes with double quotes, but be careful with apostrophes in text
+              // This handles: {'name': 'value'} -> {"name": "value"}
+              const jsonString = input
+                  .replace(/'/g, '"')           // Replace all single quotes with double quotes
+                  .replace(/True/g, 'true')     // Python True -> JSON true
+                  .replace(/False/g, 'false')   // Python False -> JSON false
+                  .replace(/None/g, 'null');    // Python None -> JSON null
+              return JSON.parse(jsonString);
+          } catch (e2) {
+              console.error('Error parsing input:', e2);
+              return null;
+          }
+      }
+  };
+
   // Parse inputs JSON when data changes
   useEffect(() => {
       if (data?.['input']) {
-          try {
-              const parsedInput = JSON.parse(data['input']);
-              
+          const parsedInput = safeParseInput(data['input']);
+          
+          if (parsedInput) {
               // Handle new format: array of objects with name, hint, type, required
               if (Array.isArray(parsedInput)) {
                   const inputFields = parsedInput.reduce((acc, field) => {
@@ -201,8 +234,7 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                   }, {} as Record<string, string>);
                   setInputValues(initialValues);
               }
-          } catch (e) {
-              //console.error('Error parsing inputs:', e);
+          } else {
               setInputs({})
               setInputValues({})
           }
