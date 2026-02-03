@@ -307,7 +307,10 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
     > 
       <CardHeader>
         <CardTitle className="flex flex-col gap-6">
-          Tools
+          <div className="flex flex-row gap-6">
+            Tools
+            <span className="text-sm flex items-center">({data.key})</span>
+          </div>
           <DynamicSelect
               label = 'Tool'
               hint = ''
@@ -377,7 +380,10 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                           <TriggerEndpoint
                               path = {`${import.meta.env.VITE_API_URL}/_schd/${portfolio}/${org}/call/${data?.['handler']}`}
                               method = 'POST'
-                              payload={inputValues}
+                              payload={{
+                                ...inputValues,
+                                ...(data?.['init'] && { '_init': data['init'] })
+                              }}
                               statusUp={statusTool}
                               captions={captions_troubleshoot}
                               onResponse={handleResponse}

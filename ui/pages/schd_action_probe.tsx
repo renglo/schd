@@ -299,8 +299,8 @@ export default function SchdActionProbe({portfolio, org, tool}: ToolDataCRUDProp
         <CardTitle className="flex flex-col gap-6">
           <div className="flex flex-row gap-6">
             Actions
-            <span className="ml-auto">
-            
+            <span className="text-sm flex items-center">({data.key})</span>
+            <span className="ml-auto">  
                 {!readonly && (
                     <DialogPost
                         refreshUp={refreshAction}
@@ -310,8 +310,7 @@ export default function SchdActionProbe({portfolio, org, tool}: ToolDataCRUDProp
                         path={`${import.meta.env.VITE_API_URL}/_data/${portfolio}/${org}/${ring}`}
                         method='POST'
                     />
-                )}  
-                          
+                )}                 
             </span>
           </div>
           <DynamicSelect
@@ -335,7 +334,7 @@ export default function SchdActionProbe({portfolio, org, tool}: ToolDataCRUDProp
               <Card className="hidden">
                 <CardHeader>
                           <div className="text-muted-foreground">
-                              Test Action
+                              Action  : {JSON.stringify(data, null, 2)} 
                           </div>               
                 </CardHeader> 
                 <CardContent className="flex flex-col gap-3 items-center">
@@ -394,7 +393,6 @@ export default function SchdActionProbe({portfolio, org, tool}: ToolDataCRUDProp
                       onResponse={handleResponse}
                       onError={handleError}
                   />
-                  
                 </CardContent>
                 <CardFooter>
                   
