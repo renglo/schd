@@ -441,17 +441,19 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                       </CardHeader>   
                       <CardContent className="group flex items-center justify-between">
                           <span className="flex items-center gap-1">
-                              <DialogPutWide
-                                  selectedKey={key} 
-                                  selectedValue={value} 
-                                  refreshUp={refreshTool}
-                                  blueprint={blueprint}
-                                  title='Edit attribute'
-                                  instructions={fieldsDictionary[key]?.hint ?? ''}
-                                  path={`${import.meta.env.VITE_API_URL}/_data/${portfolio}/${org}/${ring}/${toolId}`}
-                                  method='PUT'
-                              />
-                              <span className="whitespace-pre-wrap">
+                              <span className="shrink-0">
+                                <DialogPutWide
+                                    selectedKey={key} 
+                                    selectedValue={value} 
+                                    refreshUp={refreshTool}
+                                    blueprint={blueprint}
+                                    title='Edit attribute'
+                                    instructions={fieldsDictionary[key]?.hint ?? ''}
+                                    path={`${import.meta.env.VITE_API_URL}/_data/${portfolio}/${org}/${ring}/${toolId}`}
+                                    method='PUT'
+                                />
+                              </span>
+                              <span className="whitespace-pre-wrap min-w-0">
                                 {blueprint?.rich?.[blueprint.sources?.[key]?.split(':')[0]]?.[value] ?? value}
                               </span>
                           </span>  
