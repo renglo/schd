@@ -1,6 +1,11 @@
 import {
+  Braces,
   CircleHelp,
+  Copy,
+  Check,
 } from "lucide-react"
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 
 import { Button } from "@/components/ui/button"
@@ -60,6 +65,58 @@ interface ToolDataCRUDProps {
   ring: string;
 }
 
+const syntaxStyle = {
+  ...oneDark,
+  'pre[class*="language-"]': {
+    ...oneDark['pre[class*="language-"]'],
+    background: 'transparent',
+    margin: 0,
+    padding: '1rem',
+    minWidth: 0,
+    overflowX: 'auto',
+  },
+  'code[class*="language-"]': {
+    ...oneDark['code[class*="language-"]'],
+    background: 'transparent',
+  },
+  'pre[class*="language-"] > code[class*="language-"]': {
+    ...oneDark['pre[class*="language-"] > code[class*="language-"]'],
+    background: 'transparent',
+  },
+  'pre[class*="language-"] > code[class*="language-"]::before': { display: 'none' },
+  'pre[class*="language-"] > code[class*="language-"]::after': { display: 'none' },
+};
+
+function JsonBlock({ label, data }: { label: string; data: unknown }) {
+  const [copied, setCopied] = useState(false);
+  const text = JSON.stringify(data, null, 2);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // ignore
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-1 min-w-0 w-full" style={{ contain: 'inline-size' }}>
+      <div className="text-xs text-gray-400 bg-neutral-800/70 font-mono px-2 py-2 rounded-t flex flex-row items-center gap-2 shrink-0">
+        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs shrink-0" onClick={handleCopy}>
+          {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+        </Button>
+        <span className="flex items-center gap-1 min-w-0 truncate">{label} <Braces className="h-4 w-4 shrink-0" /></span>
+      </div>
+      <div className="text-sm bg-neutral-700 text-white rounded-b font-mono overflow-x-auto min-w-0 w-full">
+        <SyntaxHighlighter language="json" style={syntaxStyle}>
+          {text}
+        </SyntaxHighlighter>
+      </div>
+    </div>
+  );
+}
 
 export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProps) {
 
@@ -334,8 +391,8 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                           </div>                 
                 </CardHeader> 
                 <CardContent className="flex flex-col gap-3 items-center">
-                  <span className="flex flex-row justify-between w-full gap-6">
-                    <span className="flex flex-col gap-4 w-1/2">
+                  <div className="flex flex-row w-full min-w-0 gap-6 min-h-0 max-h-[50vh] overflow-hidden" style={{ contain: 'layout' }}>
+                    <div className="flex flex-col gap-4 min-w-0 overflow-y-auto overflow-x-auto w-1/3 shrink-0 p-2" style={{ contain: 'inline-size' }}>
                       <div className="sticky top-0 bg-white z-10 space-y-4">
                           <div className="flex-1 space-y-4">
                               {Object.entries(inputs).map(([key, field]) => {
@@ -373,7 +430,7 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                           </div>
                           <div className="flex-1">
                               Input:
-                              <pre className="text-sm bg-gray-100 p-2 rounded whitespace-pre-wrap break-words overflow-x-auto max-w-full">
+                              <pre className="text-sm bg-gray-100 p-2 rounded whitespace-pre overflow-x-auto min-w-0">
                                   {JSON.stringify(inputValues, null, 2)}
                               </pre>
                           </div>
@@ -390,25 +447,17 @@ export default function SchdToolProbe({ portfolio, org, tool }: ToolDataCRUDProp
                               onError={handleError}
                           />
                       </div>
-                    </span>
+                    </div>
                     
-                    <div className="flex-1 gap-3">
-                        Output:
-                        <pre className="text-sm bg-gray-100 p-2 rounded whitespace-pre-wrap break-words overflow-x-auto max-w-full">
-                            {JSON.stringify(response, null, 2)}
-                        </pre>
-                        
+                    <div className="flex flex-col gap-3 min-w-0 overflow-y-auto overflow-x-auto w-2/3 shrink-0" style={{ contain: 'inline-size' }}>
+                        {response != null && (
+                          <JsonBlock label="Output" data={response} />
+                        )}
                         {errorResponse && (
-                        <>
-                        Error:
-                        <pre className="text-sm bg-gray-100 p-2 rounded whitespace-pre-wrap break-words overflow-x-auto max-w-full">
-                            {JSON.stringify(errorResponse, null, 2)}
-                        </pre>
-                        </>  
-
-                          )}
+                          <JsonBlock label="Error" data={errorResponse} />
+                        )}
                     </div>   
-                  </span>  
+                  </div>  
                 
                   
                 </CardContent>

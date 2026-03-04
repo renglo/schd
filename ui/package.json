@@ -10,11 +10,10 @@
     "./ui/navigation/*": "./navigation/*",
     "./ui/onboarding/*": "./onboarding/*"
   },
-  "dependencies": {},
   "peerDependencies": {
+    "lucide-react": "^0.426.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "lucide-react": "^0.426.0"
+    "react-syntax-highlighter": "^15.6.1"
   }
 }
-
