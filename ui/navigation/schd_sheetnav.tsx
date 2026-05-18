@@ -57,7 +57,7 @@ import {
                    <button 
                         onClick={() => {
                             setOpen(false);
-                            onNavigate(`/${portfolio}/${org}/schd/agent`);
+                            onNavigate(`/${portfolio}/${org}/${tool}/agent`);
                         }}
                         className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                     >
@@ -67,7 +67,7 @@ import {
                   <button 
                         onClick={() => {
                             setOpen(false);
-                            onNavigate(`/${portfolio}/${org}/schd/actions`);
+                            onNavigate(`/${portfolio}/${org}/${tool}/actions`);
                         }}
                         className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                     >
@@ -77,7 +77,7 @@ import {
                   <button 
                       onClick={() => {
                           setOpen(false);
-                          onNavigate(`/${portfolio}/${org}/schd/tools`);
+                          onNavigate(`/${portfolio}/${org}/${tool}/tools`);
                       }}
                       className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >
@@ -90,7 +90,7 @@ import {
                   <button
                       onClick={() => {
                           setOpen(false);
-                          onNavigate(`/${portfolio}/${org}/schd/schd_jobs`);
+                          onNavigate(`/${portfolio}/${org}/${tool}/schd_jobs`);
                       }}
                       className="flex items-center gap-4 px-2.5 text-foreground"
                   >
@@ -100,7 +100,7 @@ import {
                   <button 
                       onClick={() => {
                           setOpen(false);
-                          onNavigate(`/${portfolio}/${org}/schd/schd_runs`);
+                          onNavigate(`/${portfolio}/${org}/${tool}/schd_runs`);
                       }}
                       className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >
@@ -110,7 +110,7 @@ import {
                   <button 
                       onClick={() => {
                           setOpen(false);
-                          onNavigate(`/${portfolio}/${org}/schd/schd_rules`);
+                          onNavigate(`/${portfolio}/${org}/${tool}/schd_rules`);
                       }}
                       className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >
@@ -120,7 +120,7 @@ import {
                   <button 
                       onClick={() => {
                           setOpen(false);
-                          onNavigate(`/${portfolio}/${org}/schd/schd_actions`);
+                          onNavigate(`/${portfolio}/${org}/${tool}/schd_actions`);
                       }}
                       className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >
@@ -130,7 +130,7 @@ import {
                   <button 
                       onClick={() => {
                           setOpen(false);
-                          onNavigate(`/${portfolio}/${org}/schd/schd_tools`);
+                          onNavigate(`/${portfolio}/${org}/${tool}/schd_tools`);
                       }}
                       className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >

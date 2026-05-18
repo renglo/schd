@@ -428,7 +428,7 @@ export default function SchdActionProbe({portfolio, org, tool}: ToolDataCRUDProp
             <span className="flex flex-row items-center gap-5 justify-end w-full">
                 <SquarePen size={20} color="#a6a0a0" className="h-3 w-3" />
                 <div className="text-xs">
-                  <a href={`/${portfolio}/${org}/schd/schd_actions`}>
+                  <a href={`/${portfolio}/${org}/${tool}/schd_actions`}>
                       Edit all actions in detail
                   </a>
                 </div>

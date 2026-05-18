@@ -38,7 +38,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipTrigger asChild>
                   <div className="hidden flex items-center flex-col">
                     <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/agent`)}
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/agent`)}
                       className={
                         section === 'agent'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
@@ -59,7 +59,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipTrigger asChild>
                   <div className="flex items-center flex-col">
                     <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/action`)}
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/action`)}
                       className={
                         section === 'action'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
@@ -80,7 +80,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipTrigger asChild>
                   <div className="flex items-center flex-col">
                     <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/tool`)}
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/tool`)}
                       className={
                         section === 'tool'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
@@ -104,7 +104,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipTrigger asChild>
                   <div className="flex items-center flex-col">
                     <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_jobs`)}
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/schd_jobs`)}
                       className={
                         section === 'schd_jobs'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
@@ -125,7 +125,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipTrigger asChild>
                   <div className="flex items-center flex-col">
                     <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_runs`)}
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/schd_runs`)}
                       className={
                         section === 'schd_runs'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
@@ -146,7 +146,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipTrigger asChild>
                   <div className="flex items-center flex-col">
                     <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_rules`)}
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/schd_rules`)}
                       className={
                         section === 'schd_rules'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
@@ -167,7 +167,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipTrigger asChild>
                   <div className="flex items-center flex-col">
                     <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_actions`)}
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/schd_actions`)}
                       className={
                         section === 'schd_actions'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
@@ -188,7 +188,7 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipTrigger asChild>
                   <div className="flex items-center flex-col">
                     <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/schd/schd_tools`)}
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/schd_tools`)}
                       className={
                         section === 'schd_tools'
                           ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
