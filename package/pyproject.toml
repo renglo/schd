@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "schd"
 version = "1.0.0"
 description = "Scheduler custom handlers, blueprints, and utilities"
+license = { text = "MIT" }
 authors = [
     {name = "Renglo Team"}
 ]

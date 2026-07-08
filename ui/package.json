@@ -2,6 +2,7 @@
   "name": "@renglo/scheduler",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "main": "./schd.tsx",
   "exports": {
