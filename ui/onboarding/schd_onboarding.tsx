@@ -1,24 +1,26 @@
-import { useEffect, useState } from "react";
-import { Download, Star } from "lucide-react";
+import { useMemo } from "react";
+import { Clock8, Download, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import DialogPost from "@/components/console/dialog-post";
-  
+
 interface BlueprintField {
   name: string;
   layer?: string;
   options?: Record<string, string>;
   widget?: string;
   required?: boolean;
-  [key: string]: any;
+  label?: string;
+  hint?: string;
+  [key: string]: unknown;
 }
 
 interface Blueprint {
   label: string;
   fields?: BlueprintField[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
-  
+
 interface TreeStructure {
   portfolios: {
     [key: string]: {
@@ -36,40 +38,90 @@ interface SchdOnboardingProps {
   tree: TreeStructure;
 }
 
-import {
-  Clock8,
-} from "lucide-react"
+const SCHD_ONBOARDING_BLUEPRINT: Blueprint = {
+  label: "Scheduler Onboardings",
+  fields: [
+    {
+      cardinality: "single",
+      default: "",
+      hint: "Portfolio this handle should belong to:",
+      label: "Portfolio",
+      layer: "2",
+      multilingual: false,
+      name: "portfolio",
+      order: "2",
+      required: false,
+      semantic: "hs:portfolio",
+      source: "",
+      type: "string",
+      widget: "text",
+    },
+    {
+      cardinality: "single",
+      default: "",
+      hint: "Org the app should belong to",
+      label: "Org",
+      layer: "2",
+      multilingual: false,
+      name: "org",
+      order: "3",
+      required: false,
+      semantic: "hs:org",
+      source: "",
+      type: "string",
+      widget: "text",
+    },
+    {
+      cardinality: "single",
+      default: "Admin",
+      hint: "Team the main user should belong to",
+      label: "Team",
+      layer: "2",
+      multilingual: false,
+      name: "team",
+      order: "4",
+      required: false,
+      semantic: "hs:team",
+      source: "",
+      type: "string",
+      widget: "text",
+    },
+    {
+      cardinality: "single",
+      default: "",
+      hint: "Tool the user is getting onboarded to",
+      label: "Tool",
+      layer: "2",
+      multilingual: false,
+      name: "tool",
+      order: "5",
+      required: false,
+      semantic: "hs:tool",
+      source: "",
+      type: "string",
+      widget: "text",
+    },
+    {
+      cardinality: "single",
+      default: "16",
+      hint: "How often should the agent run an operational cycle?",
+      label: "Refresh Rate (minutes)",
+      layer: "0",
+      multilingual: false,
+      name: "refresh_rate",
+      order: "6",
+      required: false,
+      semantic: "hs:refresh",
+      type: "string",
+      widget: "text",
+    },
+  ],
+};
 
 export default function SchdOnboarding({ tree }: SchdOnboardingProps) {
-  const [blueprint, setBlueprint] = useState<Blueprint>({ label: "" });
-  const [modifiedBlueprint, setModifiedBlueprint] = useState<Blueprint>({ label: "" });
-
-  useEffect(() => {
-    const fetchBlueprint = async () => {
-      try {
-        const blueprintResponse = await fetch(
-          `${import.meta.env.VITE_API_URL}/_blueprint/irma/schd_onboardings/last`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${sessionStorage.accessToken}`,
-            },
-          }
-        );
-        const blueprintData = await blueprintResponse.json();
-        setBlueprint(blueprintData);
-        setModifiedBlueprint({ ...blueprintData });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchBlueprint();
-  }, []);
-
-  useEffect(() => {
-    if (!tree?.portfolios || !blueprint?.fields) {
-      return;
+  const onboardingBlueprint = useMemo(() => {
+    if (!tree?.portfolios) {
+      return SCHD_ONBOARDING_BLUEPRINT;
     }
 
     const portfolioDict: Record<string, string> = {};
@@ -77,9 +129,9 @@ export default function SchdOnboarding({ tree }: SchdOnboardingProps) {
       portfolioDict[portfolioId] = portfolio.name;
     });
 
-    const updatedBlueprint = {
-      ...blueprint,
-      fields: blueprint.fields.map((field: BlueprintField) => {
+    return {
+      ...SCHD_ONBOARDING_BLUEPRINT,
+      fields: SCHD_ONBOARDING_BLUEPRINT.fields!.map((field) => {
         if (field.name === "portfolio") {
           return {
             ...field,
@@ -92,12 +144,10 @@ export default function SchdOnboarding({ tree }: SchdOnboardingProps) {
         return field;
       }),
     };
-
-    setModifiedBlueprint(updatedBlueprint);
-  }, [tree, blueprint]);
+  }, [tree]);
 
   const refreshAction = () => {};
-  const portfolioField = modifiedBlueprint.fields?.find(
+  const portfolioField = onboardingBlueprint.fields?.find(
     (field: BlueprintField) => field.name === "portfolio"
   );
   const hasPortfolioOptions =
@@ -146,7 +196,7 @@ export default function SchdOnboarding({ tree }: SchdOnboardingProps) {
           {hasPortfolioOptions ? (
             <DialogPost
               refreshUp={refreshAction}
-              blueprint={modifiedBlueprint}
+              blueprint={onboardingBlueprint}
               title="Activate your portfolio"
               instructions="Please fill the following fields:"
               path={`${import.meta.env.VITE_API_URL}/_schd/run/schd/schd_onboardings`}
@@ -161,4 +211,3 @@ export default function SchdOnboarding({ tree }: SchdOnboardingProps) {
     </Card>
   );
 }
-  
