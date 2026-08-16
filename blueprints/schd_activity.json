@@ -1,0 +1,48 @@
+{
+    "_id": "5e834ed5-d532-4852-a20f-5928a76c2b03",
+    "added": "2026-08-15T00:00:00.000000",
+    "blueprint_origin": "",
+    "description": "Scheduler activity index — one document per UTC day with append-only entries; handler output in S3",
+    "fields": [
+        {
+            "cardinality": "single",
+            "default": "",
+            "hint": "UTC calendar date (YYYY-MM-DD); document _id matches this field",
+            "label": "Journal date",
+            "layer": "0",
+            "multilingual": false,
+            "name": "journal_date",
+            "order": "1",
+            "required": true,
+            "semantic": "hs:journal_date",
+            "source": "",
+            "type": "string",
+            "widget": "text"
+        },
+        {
+            "cardinality": "multiple",
+            "default": "",
+            "hint": "Append-only activity rows (event_id, ts, event_type, summary, refs, detail_s3_path)",
+            "label": "Entries",
+            "layer": "1",
+            "multilingual": false,
+            "name": "entries",
+            "order": "2",
+            "required": false,
+            "semantic": "hs:activity_entries",
+            "source": "",
+            "type": "object",
+            "widget": "list"
+        }
+    ],
+    "handle": "irma",
+    "irn": "irn:blueprint:irma:schd_activity",
+    "label": "Scheduler activity",
+    "license": "CC BY",
+    "name": "schd_activity",
+    "public": true,
+    "status": "final",
+    "singleton": false,
+    "uri": "https://renglo.com/_blueprint/irma/schd_activity/0.0.1",
+    "version": "0.0.1"
+}

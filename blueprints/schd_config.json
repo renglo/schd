@@ -1,0 +1,33 @@
+{
+    "_id": "5e834ed5-d532-4852-a20f-5928a76c2b04",
+    "added": "2026-08-15T00:00:00.000000",
+    "blueprint_origin": "",
+    "description": "Scheduler org config",
+    "fields": [
+        {
+            "cardinality": "single",
+            "default": "every_1_minute",
+            "hint": "Heartbeat used as the due-checker for one-time jobs",
+            "label": "Due-check heartbeat",
+            "layer": "0",
+            "multilingual": false,
+            "name": "due_check_heartbeat",
+            "order": "1",
+            "required": false,
+            "semantic": "hs:heartbeat",
+            "source": "",
+            "type": "string",
+            "widget": "text"
+        }
+    ],
+    "handle": "irma",
+    "irn": "irn:blueprint:irma:schd_config",
+    "label": "Scheduler Config",
+    "license": "CC BY",
+    "name": "schd_config",
+    "public": true,
+    "singleton": true,
+    "status": "final",
+    "uri": "https://renglo.com/_blueprint/irma/schd_config/0.0.1",
+    "version": "0.0.1"
+}

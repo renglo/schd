@@ -2,6 +2,8 @@ import ToolDataCRUD from "@renglo/data/pages/tool_data_crud"
 import SchdActionProbe from "@renglo/schd/pages/schd_action_probe"
 import SchdToolProbe from "@renglo/schd/pages/schd_tool_probe"
 import SchdLoop from "@renglo/schd/pages/schd_loop"
+import SchdSchedule from "@renglo/schd/pages/schd_schedule"
+import SchdActivity from "@renglo/schd/pages/schd_activity"
 import { useEffect } from "react"
 
 
@@ -34,10 +36,9 @@ export default function Schd({ portfolio, org, tool, section, tree, query }: {
  
     console.log('SCHD >> Portfolio/Org/Tool/Section',portfolio,org,tool,section);
 
-    // If undefined. It should be redirected to /agent
     useEffect(() => {
         if (!section) {
-            window.location.href = `/${portfolio}/${org}/${tool}/tool`;
+            window.location.href = `/${portfolio}/${org}/${tool}/schedule`;
         }
     }, [section, portfolio, org, tool]);
 
@@ -51,8 +52,11 @@ export default function Schd({ portfolio, org, tool, section, tree, query }: {
         
           <div className="flex flex-col sm:gap-2 sm:pl-2">
 
+            {section === 'schedule' && <SchdSchedule portfolio={portfolio} org={org} tool={tool} />}
+            {section === 'activity' && <SchdActivity portfolio={portfolio} org={org} tool={tool} />}
             {section === 'schd_jobs' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={section} />}
-            {section === 'schd_runs' && <ToolDataCRUD readonly={true} portfolio={portfolio} org={org} tool={tool} ring={section} />}
+            {section === 'schd_heartbeats' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={section} />}
+            {section === 'schd_activity' && <ToolDataCRUD readonly={true} portfolio={portfolio} org={org} tool={tool} ring={section} />}
             {section === 'schd_rules' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={section} />}
             {section === 'schd_actions' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={section} />}
             {section === 'schd_tools' && <ToolDataCRUD readonly={false} portfolio={portfolio} org={org} tool={tool} ring={section} />}

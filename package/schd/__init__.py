@@ -22,8 +22,15 @@ def _get_initialize_extension():
     return InitializeExtension
 
 
+def _get_check_weather():
+    from schd.handlers.check_weather import CheckWeather
+
+    return CheckWeather
+
+
 HANDLERS = {
     "initialize_extension": _get_initialize_extension,
+    "check_weather": _get_check_weather,
 }
 
 def get_handler(handler_name: str):

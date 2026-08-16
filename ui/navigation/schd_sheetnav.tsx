@@ -90,22 +90,32 @@ import {
                   <button
                       onClick={() => {
                           setOpen(false);
-                          onNavigate(`/${portfolio}/${org}/${tool}/schd_jobs`);
+                          onNavigate(`/${portfolio}/${org}/${tool}/schedule`);
                       }}
                       className="flex items-center gap-4 px-2.5 text-foreground"
                   >
-                      <Bot className="h-5 w-5" />
-                      Jobs
+                      <TimerReset className="h-5 w-5" />
+                      Schedule
                   </button>
-                  <button 
+                  <button
                       onClick={() => {
                           setOpen(false);
-                          onNavigate(`/${portfolio}/${org}/${tool}/schd_runs`);
+                          onNavigate(`/${portfolio}/${org}/${tool}/activity`);
                       }}
                       className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >
                       <Bike className="h-5 w-5" />
-                      Runs
+                      Activity
+                  </button>
+                  <button
+                      onClick={() => {
+                          setOpen(false);
+                          onNavigate(`/${portfolio}/${org}/${tool}/schd_jobs`);
+                      }}
+                      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                      <Bot className="h-5 w-5" />
+                      Jobs
                   </button>
                   <button 
                       onClick={() => {

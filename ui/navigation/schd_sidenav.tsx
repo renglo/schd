@@ -1,6 +1,7 @@
 import {
   Bot,
-  Bike,
+  CalendarClock,
+  History,
   TimerReset,
   Wrench,
   Zap,
@@ -104,6 +105,48 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                 <TooltipTrigger asChild>
                   <div className="flex items-center flex-col">
                     <button
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/schedule`)}
+                      className={
+                        section === 'schedule'
+                          ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
+                          : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
+                      }
+                    >
+                        <CalendarClock className="h-5 w-5" />
+                        <span className="sr-only">Schedule</span>
+                    </button>
+                    <span className="text-xxs ">Schedule</span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">Schedule</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center flex-col">
+                    <button
+                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/activity`)}
+                      className={
+                        section === 'activity'
+                          ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
+                          : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
+                      }
+                    >
+                        <History className="h-5 w-5" />
+                        <span className="sr-only">Activity</span>
+                    </button>
+                    <span className="text-xxs ">Activity</span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">Activity</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center flex-col">
+                    <button
                       onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/schd_jobs`)}
                       className={
                         section === 'schd_jobs'
@@ -118,27 +161,6 @@ export default function ToolSchdSideNav({portfolio, org, tool, section, onNaviga
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="right">Jobs</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center flex-col">
-                    <button
-                      onClick={() => onNavigate(`/${portfolio}/${org}/${tool}/schd_runs`)}
-                      className={
-                        section === 'schd_runs'
-                          ? 'group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-gray-200 text-lg font-semibold text-muted-foreground md:h-12 md:w-12 md:text-base'
-                          : 'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
-                      }
-                    >
-                        <Bike className="h-5 w-5" />
-                        <span className="sr-only">Runs</span>
-                    </button>
-                    <span className="text-xxs ">Runs</span>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="right">Runs</TooltipContent>
             </Tooltip>
           </TooltipProvider>
           <TooltipProvider>

@@ -10,12 +10,14 @@ optional dependencies are not installed.
 
 # Add your handler exports here
 __all__ = [
-    # 'ExampleHandler',
+    "CheckWeather",
 ]
 
 def __getattr__(name):
     """Lazy import handlers when accessed."""
-    # Add your handler imports here
-    # 
+    if name == "CheckWeather":
+        from schd.handlers.check_weather import CheckWeather
+
+        return CheckWeather
     raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
 

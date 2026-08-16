@@ -4,6 +4,7 @@ from renglo.blueprint.extension_blueprints import ensure_extension_blueprints
 from renglo.common import load_config
 from renglo.data.data_controller import DataController
 from renglo.logger import get_logger
+from renglo.schd.schd_controller import SchdController
 
 
 class InitializeExtension:
@@ -22,6 +23,7 @@ class InitializeExtension:
         self.DAC = DataController(config=config)
         self.AUC = AuthController(config=config)
         self.BPC = BlueprintController(config=config)
+        self.SHC = SchdController(config=config)
         self.logger = get_logger()
 
     def run(self, payload):
@@ -58,6 +60,17 @@ class InitializeExtension:
         config_step = self.ensure_config(portfolio, org, payload)
         results.append(config_step)
         if not config_step.get("success"):
+            return {
+                "success": False,
+                "action": "initialize_extension",
+                "message": "Schd initialization failed",
+                "input": payload,
+                "output": results,
+            }
+
+        heartbeats_step = self.SHC.ensure_heartbeats(portfolio, org)
+        results.append(heartbeats_step)
+        if not heartbeats_step.get("success"):
             return {
                 "success": False,
                 "action": "initialize_extension",
