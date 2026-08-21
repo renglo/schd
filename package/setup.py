@@ -6,7 +6,7 @@ Custom handlers, blueprints, and utilities for the Scheduler platform
 from setuptools import setup, find_packages
 
 setup(
-    name="schd",
+    name="renglo-schd",
     version="1.0.0",
     description="Scheduler custom handlers, blueprints, and utilities",
     author="Renglo Team",
