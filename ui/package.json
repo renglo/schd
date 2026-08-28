@@ -7,8 +7,9 @@
   "exports": {
     ".": "./schd.tsx",
     "./ui/*": "./*",
-    "./ui/navigation/*": "./navigation/*",
-    "./ui/onboarding/*": "./onboarding/*"
+    "./pages/*": "./pages/*",
+    "./navigation/*": "./navigation/*",
+    "./onboarding/*": "./onboarding/*"
   },
   "peerDependencies": {
     "lucide-react": "^0.426.0",
