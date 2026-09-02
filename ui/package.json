@@ -1,15 +1,15 @@
 {
   "name": "@renglo/schd",
-  "version": "1.0.0",
-  "private": true,
+  "version": "0.0.2",
   "license": "MIT",
   "type": "module",
   "main": "./schd.tsx",
   "exports": {
     ".": "./schd.tsx",
     "./ui/*": "./*",
-    "./ui/navigation/*": "./navigation/*",
-    "./ui/onboarding/*": "./onboarding/*"
+    "./pages/*": "./pages/*",
+    "./navigation/*": "./navigation/*",
+    "./onboarding/*": "./onboarding/*"
   },
   "peerDependencies": {
     "lucide-react": "^0.426.0",
