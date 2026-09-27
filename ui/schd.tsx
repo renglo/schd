@@ -63,7 +63,7 @@ export default function Schd({ portfolio, org, tool, section, tree, query }: {
 
             {section === 'agent' && <SchdLoop portfolio={portfolio} org={org} tool={tool} tree={tree} query={query} />}
             {section === 'action' && <SchdActionProbe portfolio={portfolio} org={org} tool={tool} />}
-            {section === 'tool' && <SchdToolProbe portfolio={portfolio} org={org} tool={tool} />}
+            {(section === 'tool' || section === 'sync') && <SchdToolProbe portfolio={portfolio} org={org} tool={tool} query={query} />}
 
           </div>
         </div>
