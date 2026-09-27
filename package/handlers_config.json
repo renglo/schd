@@ -1,0 +1,8 @@
+{
+  "handlers": {
+    "check_weather": "schd.handlers.check_weather.CheckWeather",
+    "initialize_extension": "schd.handlers.initialize_extension.InitializeExtension",
+    "schd_onboardings": "schd.handlers.schd_onboardings.SchdOnboardings",
+    "sync_handlers": "schd.handlers.sync_handlers.SyncHandlers"
+  }
+}

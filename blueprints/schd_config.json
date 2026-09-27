@@ -18,6 +18,21 @@
             "source": "",
             "type": "string",
             "widget": "text"
+        },
+        {
+            "cardinality": "single",
+            "default": "",
+            "hint": "JSON summary of the last handler catalog sync",
+            "label": "Handler sync",
+            "layer": "1",
+            "multilingual": false,
+            "name": "handler_sync",
+            "order": "2",
+            "required": false,
+            "semantic": "",
+            "source": "",
+            "type": "string",
+            "widget": "textarea"
         }
     ],
     "handle": "irma",
