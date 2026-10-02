@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import ChatHistory from "@/components/console/chat-history"
 import ChatInput from "@/components/console/chat-input"
+import { ChatSocketProvider } from "@/components/console/chat-socket"
 import { Badge } from "@/components/ui/badge"
 import ChatWidgetJson from "@/components/console/chat-widget-json"
 import ChatWidgetText from "@/components/console/chat-widget-text"
@@ -361,7 +362,7 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
     };
 
     return (
-      <>
+      <ChatSocketProvider onMessage={(data) => messageAction({ type: "rs", update: data })}>
         <PanelGroup direction="horizontal">
           <Panel defaultSize={50} minSize={30}>
             <span className="h-[calc(100vh-80px)] flex flex-col rounded-t-none"> 
@@ -570,6 +571,6 @@ export default function SchdLoop({portfolio, org, tool, tree, query}: AgentProps
             </span>
           </Panel>
         </PanelGroup>
-      </> 
+      </ChatSocketProvider>
     )
 }
