@@ -118,6 +118,20 @@
       "semantic": "isd:instructions",
       "type": "string",
       "widget": "textarea"
+    },
+    {
+      "cardinality": "single",
+      "default": "_",
+      "hint": "JSON latency_ms rows. The row that matches this call decides: high above 25000 ms runs on the peer.",
+      "label": "Execution",
+      "layer": "1",
+      "multilingual": false,
+      "name": "execution",
+      "order": "10",
+      "required": false,
+      "semantic": "isd:execution",
+      "type": "string",
+      "widget": "textarea"
     }
   ],
   "handle": "irma",

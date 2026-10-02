@@ -12,6 +12,12 @@ PACKAGE = Path(__file__).resolve().parents[1]
 if str(PACKAGE) not in sys.path:
     sys.path.insert(0, str(PACKAGE))
 
+from schd.lib.execution import (  # noqa: E402
+    latency_sentence,
+    match_latency,
+    normalize_execution,
+    should_detach,
+)
 from schd.lib.handler_catalog import (  # noqa: E402
     diff_catalog,
     discover_handler_configs,
@@ -129,6 +135,94 @@ class DescribeMappingTests(unittest.TestCase):
         parsed = json.loads(fields["input"])
         self.assertEqual(parsed["properties"]["action"]["type"], "string")
         self.assertEqual(json.loads(fields["output"]), {"type": "object"})
+        self.assertEqual(json.loads(fields["execution"]), {})
+
+    def test_matched_row_decides_detach(self) -> None:
+        fields = fields_from_describe(
+            "tourbotlink",
+            "agencies_info_reports",
+            {
+                "title": "Agency Info",
+                "description": "Profile",
+                "instructions": "Prefer the code.",
+                "execution": {
+                    "mode": "async",
+                    "latency_ms": [
+                        {
+                            "when": "Direct code lookup",
+                            "args": {"agency_code": "set"},
+                            "typical": 2000,
+                            "low": 500,
+                            "high": 15000,
+                        },
+                        {
+                            "when": "Open search (name only)",
+                            "args": {"agency_code": "empty", "agency_name": "set"},
+                            "typical": 60000,
+                            "low": 20000,
+                            "high": 180000,
+                        },
+                    ],
+                },
+            },
+        )
+        stored = json.loads(fields["execution"])
+        self.assertNotIn("mode", stored)
+        self.assertEqual(stored["latency_ms"][0]["args"], {"agency_code": "set"})
+        self.assertEqual(fields["instructions"], "Prefer the code.")
+        sentence = latency_sentence(stored)
+        self.assertIn("Direct code lookup: typically 2s, often 500ms to 15s.", sentence)
+        self.assertIn("Open search (name only): typically 60s, often 20s to 3min.", sentence)
+        code = {"agency_code": "WIS5"}
+        name = {"agency_name": "planet", "agency_code": ""}
+        self.assertEqual(should_detach(stored, True, code), "sync")
+        self.assertEqual(should_detach(stored, True, name), "async")
+        self.assertEqual(should_detach(stored, False, name), "sync")
+        self.assertEqual(should_detach(normalize_execution({}), True, {}), "sync")
+        self.assertEqual(match_latency(stored, name)["when"], "Open search (name only)")
+        self.assertEqual(match_latency(stored, code)["when"], "Direct code lookup")
+        # The label is display text. A word in it must not select the row.
+        labeled = normalize_execution(
+            {
+                "mode": "async",
+                "latency_ms": [
+                    {
+                        "when": "name code path",
+                        "args": {"agency_name": "set"},
+                        "typical": 1000,
+                        "high": 2000,
+                    },
+                    {
+                        "when": "Open search (name only)",
+                        "args": {"q": "set"},
+                        "typical": 60000,
+                        "high": 180000,
+                    },
+                ],
+            }
+        )
+        self.assertNotIn("mode", labeled)
+        self.assertEqual(match_latency(labeled, {"q": "acme"})["when"], "Open search (name only)")
+        self.assertEqual(should_detach(labeled, True, {"agency_name": "planet"}), "sync")
+        self.assertEqual(should_detach(labeled, True, {"q": "acme"}), "async")
+        self.assertEqual(should_detach(labeled, False, {"q": "acme"}), "sync")
+        window = normalize_execution(
+            {
+                "latency_ms": [
+                    {
+                        "when": "Month or longer",
+                        "args": {"period": ["year_to_date", "last_month"]},
+                        "typical": 20000,
+                        "high": 120000,
+                    },
+                    {"when": "Short period", "typical": 4000, "high": 20000},
+                ]
+            }
+        )
+        self.assertEqual(match_latency(window, {"period": "year_to_date"})["when"], "Month or longer")
+        self.assertEqual(match_latency(window, {})["when"], "Short period")
+        self.assertEqual(should_detach(window, True, {"period": "yesterday"}), "sync")
+        self.assertEqual(should_detach(window, True, {"period": "last_month"}), "async")
 
     def test_missing_describe_still_has_a_route(self) -> None:
         fields = undescribed_fields("schd", "check_weather")
