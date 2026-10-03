@@ -21,7 +21,9 @@ CardTitle,
 
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useWebSocket, type WebSocketPayload } from "@/hooks/useWebSocket";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
 import DialogPutWide from '@/components/console/dialog-put-wide'
@@ -281,6 +283,30 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return value as Record<string, unknown>;
 }
 
+const PEER_WAIT_MS = 15 * 60 * 1000;
+
+function frameType(data: unknown): string {
+  const root = asRecord(data);
+  if (!root) return "";
+  return textOf(root._type || root.type);
+}
+
+function frameContent(data: unknown): Record<string, unknown> | null {
+  const root = asRecord(data);
+  if (!root) return null;
+  const out = asRecord(root._out) ?? asRecord(root.out);
+  if (!out) return null;
+  const content = out.content;
+  if (typeof content === "string") {
+    try {
+      return asRecord(JSON.parse(content));
+    } catch {
+      return null;
+    }
+  }
+  return asRecord(content);
+}
+
 function numberOrUndefined(value: unknown) {
   const n = Number(value);
   return Number.isFinite(n) ? n : undefined;
@@ -406,11 +432,95 @@ export default function SchdToolProbe({ portfolio, org, tool, query }: ToolDataC
   const [inputs, setInputs] = useState<ToolInputField[]>([]);
   const [inputValues, setInputValues] = useState<Record<string, string>>({});
   const [running, setRunning] = useState(false);
+  const [asyncRun, setAsyncRun] = useState(false);
   const runningRef = useRef(false);
   const [pane, setPane] = useState<"in" | "out">("in");
 
   const [response, setResponse] = useState<any>(null);
   const [errorResponse, setErrorResponse] = useState<any>(null);
+  const [awaitingPeer, setAwaitingPeer] = useState(false);
+  const connectionIdRef = useRef("");
+  const liveCallRef = useRef("");
+  const liveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sendRef = useRef<(message: string, payload?: WebSocketPayload) => boolean>(() => false);
+
+  const clearLiveTimer = useCallback(() => {
+      if (liveTimerRef.current != null) {
+          clearTimeout(liveTimerRef.current);
+          liveTimerRef.current = null;
+      }
+  }, []);
+
+  const finishPeerRun = useCallback((ok: boolean, output: unknown) => {
+      clearLiveTimer();
+      liveCallRef.current = "";
+      runningRef.current = false;
+      setRunning(false);
+      setAwaitingPeer(false);
+      if (ok) {
+          setResponse({ output });
+          setErrorResponse(null);
+      } else {
+          setErrorResponse(output);
+          setResponse(null);
+      }
+      setPane("out");
+  }, [clearLiveTimer]);
+
+  const abandonPeerRun = useCallback(() => {
+      clearLiveTimer();
+      liveCallRef.current = "";
+      runningRef.current = false;
+      setRunning(false);
+      setAwaitingPeer(false);
+  }, [clearLiveTimer]);
+
+  const { sendMessage } = useWebSocket({
+      onOpen: () => {
+          sendRef.current("{}", {
+              action: "chat_message",
+              core: "schd/probe_hello",
+              portfolio,
+              org,
+              entity_type: "",
+              entity_id: "",
+              thread: "",
+          });
+      },
+      onMessage: (incoming) => {
+          const type = frameType(incoming);
+          const content = frameContent(incoming);
+          if (type === "probe_hello" || type === "connection_ack") {
+              const root = asRecord(incoming);
+              const id = textOf(content?.connectionId)
+                  || textOf(root?.connection_id)
+                  || textOf(root?.connectionId);
+              if (!id) return;
+              if (liveCallRef.current && connectionIdRef.current && connectionIdRef.current !== id) {
+                  finishPeerRun(false, {
+                      error: "The connection dropped before the result arrived. Run it again.",
+                  });
+              }
+              connectionIdRef.current = id;
+              return;
+          }
+          if (type !== "tool_result") return;
+          const callId = textOf(content?.call_id);
+          if (!callId || callId !== liveCallRef.current) return;
+          const result = content?.result;
+          if (content?.success === false) {
+              const output = result && typeof result === "object"
+                  ? result
+                  : { error: textOf(content?.error) || "The handler failed." };
+              finishPeerRun(false, { output });
+              return;
+          }
+          finishPeerRun(true, result ?? content);
+      },
+  });
+  sendRef.current = sendMessage;
+
+  useEffect(() => () => { clearLiveTimer(); }, [clearLiveTimer]);
 
 
   console.log('TGC>Portfolio:',portfolio)
@@ -582,6 +692,7 @@ export default function SchdToolProbe({ portfolio, org, tool, query }: ToolDataC
   };
 
   const openHandler = (id: string) => {
+      abandonPeerRun();
       setToolId(id);
       setResponse(null);
       setErrorResponse(null);
@@ -591,6 +702,7 @@ export default function SchdToolProbe({ portfolio, org, tool, query }: ToolDataC
   };
 
   const backToMenu = () => {
+      abandonPeerRun();
       setToolId(null);
       setDetailsOpen(false);
       rememberTool(null);
@@ -657,21 +769,61 @@ export default function SchdToolProbe({ portfolio, org, tool, query }: ToolDataC
   const runTool = async () => {
       if (runningRef.current || !data?.['handler']) return;
       runningRef.current = true;
+      clearLiveTimer();
+      liveCallRef.current = "";
+      setAwaitingPeer(false);
       setRunning(true);
+      setResponse(null);
+      setErrorResponse(null);
+      let waiting = false;
       try {
-          const call = await fetch(`${import.meta.env.VITE_API_URL}/_schd/${portfolio}/${org}/call/${data['handler']}`, {
+          const handlerBody = {
+              ...inputValues,
+              ...(data?.['init'] ? { _init: data['init'] } : {}),
+          };
+          const headers = {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${sessionStorage.accessToken}`,
+          };
+          if (asyncRun && !connectionIdRef.current) {
+              sendRef.current("{}", {
+                  action: "chat_message",
+                  core: "schd/probe_hello",
+                  portfolio,
+                  org,
+                  entity_type: "",
+                  entity_id: "",
+                  thread: "",
+              });
+              const deadline = Date.now() + 2000;
+              while (!connectionIdRef.current && Date.now() < deadline) {
+                  await new Promise((resolve) => setTimeout(resolve, 50));
+              }
+          }
+          const path = asyncRun ? `${data['handler']}/live` : data['handler'];
+          const call = await fetch(`${import.meta.env.VITE_API_URL}/_schd/${portfolio}/${org}/call/${path}`, {
               method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${sessionStorage.accessToken}`,
-              },
-              body: JSON.stringify({
-                  ...inputValues,
-                  ...(data?.['init'] ? { _init: data['init'] } : {}),
-              }),
+              headers,
+              body: JSON.stringify(asyncRun
+                  ? { ...handlerBody, ...(connectionIdRef.current ? { connectionId: connectionIdRef.current } : {}) }
+                  : handlerBody),
           });
           const body = await call.json().catch(() => ({ error: 'Failed to parse response' }));
-          if (call.ok) {
+          if (asyncRun && body?.status === "running" && body?.call_id) {
+              const callId = String(body.call_id);
+              liveCallRef.current = callId;
+              waiting = true;
+              setAwaitingPeer(true);
+              setPane("out");
+              liveTimerRef.current = setTimeout(() => {
+                  if (liveCallRef.current !== callId) return;
+                  finishPeerRun(false, {
+                      error: "The run did not report back. It may still be finishing on the peer.",
+                  });
+              }, PEER_WAIT_MS);
+              return;
+          }
+          if (call.ok && body?.success !== false) {
               setResponse(body);
               setErrorResponse(null);
           } else {
@@ -684,9 +836,11 @@ export default function SchdToolProbe({ portfolio, org, tool, query }: ToolDataC
           });
           setResponse(null);
       } finally {
-          runningRef.current = false;
-          setRunning(false);
-          setPane("out");
+          if (!waiting) {
+              runningRef.current = false;
+              setRunning(false);
+              setPane("out");
+          }
       }
   };
 
@@ -820,9 +974,19 @@ export default function SchdToolProbe({ portfolio, org, tool, query }: ToolDataC
                                   </div>
                               ))}
                       </div>
-                      <div className="shrink-0 border-t bg-background p-3">
+                      <div className="shrink-0 space-y-3 border-t bg-background p-3">
+                          <div className="flex items-center justify-center gap-3">
+                              <span className={asyncRun ? "text-sm text-muted-foreground" : "text-sm font-medium"}>Sync</span>
+                              <Switch
+                                  checked={asyncRun}
+                                  onCheckedChange={setAsyncRun}
+                                  disabled={running}
+                                  aria-label="Async run"
+                              />
+                              <span className={asyncRun ? "text-sm font-medium" : "text-sm text-muted-foreground"}>Async</span>
+                          </div>
                           <Button className="w-full" onClick={runTool} disabled={running || !data?.['handler']}>
-                              {running ? "Running…" : "Run"}
+                              {awaitingPeer ? "Running on the peer…" : running ? "Running…" : asyncRun ? "Run async" : "Run"}
                           </Button>
                       </div>
                     </div>
@@ -840,7 +1004,11 @@ export default function SchdToolProbe({ portfolio, org, tool, query }: ToolDataC
                             <JsonBlock label="IN" data={requestPayload} />
                         </TabsContent>
                         <TabsContent value="out" className="mt-2 min-h-0 flex-1 overflow-y-auto">
-                            {returnedOutput == null ? (
+                            {awaitingPeer ? (
+                                <div className="flex h-full min-h-40 items-center justify-center rounded-md border border-dashed px-6 text-center text-sm text-muted-foreground">
+                                    Running on the peer. This page updates when the run finishes.
+                                </div>
+                            ) : returnedOutput == null ? (
                                 <div className="flex h-full min-h-40 items-center justify-center rounded-md border border-dashed px-6 text-center text-sm text-muted-foreground">
                                     The handler output shows up here after you run the tool.
                                 </div>
