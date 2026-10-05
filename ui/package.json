@@ -1,6 +1,9 @@
 {
   "name": "@renglo/schd",
   "version": "0.0.5",
+  "renglo": {
+    "platform": "0.1.4"
+  },
   "license": "MIT",
   "type": "module",
   "main": "./schd.tsx",
