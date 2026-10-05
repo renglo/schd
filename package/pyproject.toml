@@ -27,3 +27,6 @@ packages = ["schd", "schd.handlers"]
 [tool.setuptools.package-data]
 schd = ["blueprints/*.json"]
 
+[tool.renglo]
+platform = "0.1.4"
+
