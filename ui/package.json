@@ -1,6 +1,6 @@
 {
   "name": "@renglo/schd",
-  "version": "0.0.6-rc.2",
+  "version": "0.0.6",
   "renglo": {
     "platform": "0.1.5"
   },
