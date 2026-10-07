@@ -1,8 +1,8 @@
 {
   "name": "@renglo/schd",
-  "version": "0.0.6",
+  "version": "0.0.7-rc.1",
   "renglo": {
-    "platform": "0.1.5"
+    "platform": "0.1.6"
   },
   "license": "MIT",
   "type": "module",
