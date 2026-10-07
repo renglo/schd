@@ -22,7 +22,7 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = ["schd", "schd.handlers"]
+packages = ["schd", "schd.handlers", "schd.lib"]
 
 [tool.setuptools.package-data]
 schd = ["blueprints/*.json"]
