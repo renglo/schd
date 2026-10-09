@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "renglo-schd"
-version = "0.0.6"
+version = "0.0.7rc1"
 description = "Scheduler custom handlers, blueprints, and utilities"
 license = { text = "MIT" }
 authors = [
@@ -28,5 +28,5 @@ packages = ["schd", "schd.handlers"]
 schd = ["blueprints/*.json"]
 
 [tool.renglo]
-platform = "0.1.5"
+platform = "0.1.6"
 
