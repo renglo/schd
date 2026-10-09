@@ -1,6 +1,7 @@
 import { useMemo } from "react";
-import { Clock8, Download, Star } from "lucide-react";
+import { Download, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import ExtensionIcon from "@/components/console/extension-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import DialogPost from "@/components/console/dialog-post";
 
@@ -160,7 +161,7 @@ export default function SchdOnboarding({ tree }: SchdOnboardingProps) {
       </div>
       <CardContent className="p-5">
         <div className="mb-4 flex items-start gap-4">
-          <Clock8 size={68} />
+          <ExtensionIcon handle="schd" name="Scheduler" size="lg" />
           <div className="min-w-0 flex-1">
             <h3 className="truncate font-semibold text-foreground">Scheduler App</h3>
             <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
