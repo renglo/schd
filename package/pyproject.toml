@@ -28,5 +28,5 @@ packages = ["schd", "schd.handlers", "schd.lib"]
 schd = ["blueprints/*.json"]
 
 [tool.renglo]
-platform = "0.1.7"
+platform = "0.1.8"
 
